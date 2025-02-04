@@ -26,12 +26,13 @@ SECRET_KEY = 'django-insecure-!=5g15-9j8xo_zh9v-3+@kn*=+^=w56n*)#6pl_ncptdej^z+-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['cs-webapps.bu.edu']
+ALLOWED_HOSTS = ['cs-webapps.bu.edu', 'localhost', '*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'hw',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
