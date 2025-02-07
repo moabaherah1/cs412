@@ -1,20 +1,36 @@
-from django.shortcuts import render
-
+import random
 from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
 
+import time
+
 # Create your views here.
+def home_page(request):
+    '''Define a view to show the 'home.html' template.'''
 
-def home(request):
-    '''
-    Define a view to handle the 'home' request.
-    '''
+    # the template to which we will delegate the work
+    template = 'hw/home.html'
 
-    response_text = '''
-    <html>
-    <h1>Hello, world!</h1>
+    # a dict of key/value pairs, to be available for use in template
+    context = {
+        'current_time': time.ctime(),
+        'letter1' : chr(random.randint(65,90)),
+        'letter2' : chr(random.randint(65,90)),
+        'number' : random.randint(1,10),
+    }
 
-    </html>
-    '''
-    
-    return HttpResponse(response_text)
+    return render(request, template, context)
+
+def about(request):
+    '''Define a view to show the 'about.html' template.'''
+
+    # the template to which we will delegate the work
+    template = 'hw/about.html'
+
+    # a dict of key/value pairs, to be available for use in template
+    context = {
+        'current_time': time.ctime(),
+    }
+
+    return render(request, template, context)
+

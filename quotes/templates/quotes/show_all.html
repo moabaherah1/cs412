@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Quotes and Images</title>
+    
+    {% load static %}
+    <link rel="stylesheet" href="{% static '/styles.css' %}">
+</head>
+<body>
+
+<header>
+    <h1>All Quotes and Images</h1>
+    <h2 class="malcolm-x-title">Malcolm X</h2>
+</header>
+
+<main>
+    <h2>All Quotes</h2>
+
+    <!-- Loop through quotes and display them -->
+    <ul>
+    {% for quote in quotes %}
+        <li>{{ quote }}</li>
+    {% endfor %}
+    </ul>
+
+    <h2>All Images</h2>
+
+    <!-- Loop through images and display them -->
+    <div class="images-container">
+    {% for image in images %}
+        <img src="{% static image %}" alt="Image">
+    {% endfor %}
+    </div>
+
+</main>
+
+<footer>
+    <p>&copy; 2025 [Mohammed Abaherah]. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

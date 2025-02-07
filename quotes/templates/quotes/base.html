@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Quote and Image</title>
+    {% load static %}  <!-- Load the static tag -->
+    <link rel="stylesheet" href="{% static '/styles.css' %}">
+</head>
+<body>
+
+<header>
+    <h1>Random Quote and Image</h1>
+    <h2 class="malcolm-x-title">Malcolm X</h2>
+</header>
+
+<main>
+    <h2>Here’s a Random Quote:</h2>
+    <p>{{ quotes }}</p>  <!-- Display the random quote dynamically -->
+    
+    <h2>Random Image:</h2>
+    <img src="{% static images %}" alt="Random Image" />  <!-- Display the random image dynamically -->
+
+</main>
+
+<footer>
+    <p>&copy; 2025 [Mohammed Abaherah]. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
