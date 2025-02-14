@@ -8,13 +8,13 @@ import time
 
 # Create your views here.
 def home(request):
-    '''Define a view to show the 'home.html' template.'''
+    #Define a view to show the 'home.html' template.
 
     template = 'restaurant/base.html'
     return render(request, template)
 
 def order(request):
-    '''Define a view to show the order page'''
+    #Define a view to show the order page
     specials = [
         "The Mike Burger",
         "The JP Burger",
