@@ -24,6 +24,7 @@ urlpatterns = [
     path("", home, name="home_page"),
     path("quote/", include("quotes.urls")),
     path("show_all/", views.show_all, name="show_all_quotes"),
-    path("about/", views.about, name="aboutpage")
-
+    path("about/", views.about, name="aboutpage"),
+    path("formdata/", include("formdata.urls")),
+    path("restaurant/", include("restaurant.urls")),
 ]

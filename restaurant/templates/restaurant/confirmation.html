@@ -1,0 +1,52 @@
+<!-- # File: confirmation.html
+# Author: Mohammed Abaherah (abaherah@bu.edu) 13 Feb 2025
+# Description: confirmation page displaying we are done -->
+
+<!-- Sidebar -->
+<div id="sidenav" class="sidenav">
+    <p><a href="{% url 'main' %}">Main Page</a></p>
+    <p><a href="{% url 'order' %}">Order Page</a></p>
+</div>
+
+
+<!-- Main Content -->
+<div id="main">
+    <head>
+        <title>Make your Order!</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'restaurant/styles.css' %}">
+    </head>
+    <header>
+        <h1>Mike's Burgers</h1>
+    </header>
+
+    <h2>Confirmation Page</h2>
+
+    <p>Thank you for your order!</p>
+    
+    <h4>Your order will be ready at: {{readytime}}</h4>
+
+
+
+    <h3>Customer Information</h3>
+    <ul>
+        <li>Name: {{name }}</li>
+        <li>Phone: {{phone }}</li>
+        <li>Email: {{ email }}</li>
+    </ul>
+    
+
+
+
+    <h3>Your Order:</h3>
+    <ul>
+        {% for item in ordered_items %}
+            <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Special Instructions:</h3>
+    <p>{{ special_instructions }}</p>
+
+    
+    <h4>Your total will be: ${{total_price}}</h4>

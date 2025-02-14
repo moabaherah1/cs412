@@ -1,0 +1,70 @@
+<!-- # File: order.html
+# Author: Mohammed Abaherah (abaherah@bu.edu) 13 Feb 2025
+# Description: which will display the order form and links to confirmation
+
+ -->
+
+<!-- Sidebar -->
+<div id="sidenav" class="sidenav">
+    <p><a href="{% url 'main' %}">Main Page</a></p>
+    <p><a href="{% url 'order' %}">Order Page</a></p>
+</div>
+
+
+<!-- Main Content -->
+<div id="main">
+    <head>
+        <title>Make your Order!</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'restaurant/styles.css' %}">
+    </head>
+    <header>
+        <h1>Mike's Burgers</h1>
+    </header>
+
+   
+<h2> Place your orders here!</h2>
+<form action="{% url 'confirmation' %}" method="POST">
+<!-- <input type="hidden" name="csrfmiddlewaretoken" value="66bk6OAG9wFkomfX3jct5H3egIM7lasE7hD4kMP4iVnwUtPrqABvFyfnVHvHtMVG"> -->
+{% csrf_token %}
+    <p>
+        <h3>Select your Items:</h3>
+        <div><input type="checkbox" name="Small_Burger" value = "Small_Burger">Small Burger $400</div>
+        <div><input type="checkbox" name="Medium_Burger" value = "Medium_Burger">Medium Burger $500</div>
+        <div><input type="checkbox" name="Fries" value = "Fries">Fries $70</div>   
+
+        <div><input type="checkbox" name="Big_Burger" value = "Big_Burger">Big Burger $600</div>     
+        <div style="margin-left: 20px;">
+
+            <div><input type="checkbox" name="extra_cheese" value = "extra_cheese"> Extra Cheese $50</div>
+            <div><input type="checkbox" name="beef_bacon" value = "beef_bacon"> Beef Bacon $70</div>
+            <div><input type="checkbox" name="Egg" value = "egg"> Egg $80</div>
+        </div> 
+        </p>
+    <p>
+        <h3>Today's Special:</h3>
+        <div><input type="checkbox" name="specials">{{specials}} $900</div>
+        </p>
+
+    <p>
+        <h3>Special Instructions</h3>
+        Please share any special instructions:
+        <div><textarea name="special_instructions" rows="3" cols="60"></textarea></div>
+    </p>
+
+    <p>
+        <h3>Customer Information</h3>
+
+        <div>Name:</div> <div><input name="name" value=""></div>
+
+        <div>Phone:</div> <div><input name="phone" value=""></div>
+        
+        <div>Email:</div> <div><input name="email" value=""></div>
+        </p>
+
+        <p>
+        <h3>Place your order!</h3>
+        <input type="submit">        
+        </p>
+
+    </form>

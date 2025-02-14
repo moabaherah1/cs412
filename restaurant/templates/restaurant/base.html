@@ -1,0 +1,81 @@
+<!-- File: order.html -->
+<!-- Author: Mohammed Abaherah (abaherah@bu.edu) -->
+<!-- Description: Displays the order form and links to confirmation -->
+ 
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+<!-- Sidebar -->
+<div id="sidenav" class="sidenav">
+    <p><a href="{% url 'main' %}">Main Page</a></p>
+    <p><a href="{% url 'order' %}">Order Page</a></p>
+</div>
+
+<!-- Main Content -->
+<div id="main">
+    <head>
+        <title>Mike's Burgers</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'restaurant/styles.css' %}">
+    </head>
+    <header>
+        <h1>Mike's Burgers</h1>
+    </header>
+
+   
+    
+    <main>
+        <img src="{% static 'restaurant/images/mikes.jpg' %}" alt="Random Image" />
+
+        <h5>
+            Conviently located at the Charles River, Boston University 
+        </h5>
+       
+        <h2>Hours of Operations:</h2>
+        <table>
+            <tr>
+              <th>Days</th>
+              <th>Hours</th>
+            </tr>
+            <tr>
+              <td>Monday</td>
+              <td>9 am - 11 pm</td>
+            </tr>
+            <tr>
+              <td>Tuesday</td>
+              <td>9 am - 11 pm</td>           
+            </tr>
+            <tr>
+              <td>Wednesday</td>
+              <td>9 am - 11 pm</td>
+            </tr>
+            <tr>
+              <td>Thursday</td>
+              <td>9 am - 11 pm</td>
+            </tr>
+            <tr>
+              <td>Friday</td>
+              <td>10 am - 1 am</td>
+            </tr>
+            <tr>
+                <td>Saturday</td>
+                <td>10 am - 1 am</td>
+              </tr>
+            <tr>
+                <td>Sunday</td>
+                <td>10 am - 1 am</td>
+              </tr>  
+          </table>
+        <!-- <h2>Random Food Image:</h2> -->
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Mohammed Abaherah. All rights reserved.</p>
+    </footer>
+</div>
+
+
+
+</body>
+</html>
