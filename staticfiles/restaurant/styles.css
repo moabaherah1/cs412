@@ -1,0 +1,44 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    font-family: Display, sans-serif;
+  }
+  
+  .sidenav {
+      height: 100%;
+      width: 200px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      background-color: #588;
+      padding-top: 20px;
+      color: white;
+  }
+  
+  /* Side navigation links */
+  .sidenav a {
+    color: white;
+    padding: 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  /* Change color on hover */
+  .sidenav a:hover {
+    background-color: #eee;
+    color: black;
+  }
+  
+  /* Shift the main content to the right */
+  #main {
+      margin-left: 210px; /* Adjust based on sidebar width */
+      padding: 20px;
+  }
+  #header {
+    margin-left: 210px; /* Adjust based on sidebar width */
+    padding: 20px;
+  }
+  
