@@ -1,0 +1,37 @@
+<!-- # File: show_profile.html
+# Author: Mohammed Abaherah (abaherah@bu.edu) 20 Feb 2025
+# Description: display page for a single profile -->
+
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+
+<main class="profile-container">
+
+    <table class="profile-table">
+        <tr>
+            <td class="profile-image_solo">
+                <img src="{{ profile.image_url }}" alt="Profile image of {{ profile.first_name }}">
+            </td>
+
+            <td class="profile-info">
+                <h1 class="profile-title">{{ profile.first_name }}</h1>
+                <h1 class = "profile-title"> {{ profile.last_name }}</h1>
+                <h2 class="profile-city">from {{ profile.city }}</h2>
+            </td>
+            
+            
+        </tr>
+        <tr>
+            <td colspan="1" class="profile-email">
+                <h3>{{ profile.email }}</h3>
+            </td>
+        </tr>
+        <tr>
+            <a href="{% url 'show_all_profiles' %}">View All</a></h2>
+        </tr>
+    </table>
+
+</main>
+
+{% endblock %}

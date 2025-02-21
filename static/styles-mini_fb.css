@@ -6,16 +6,52 @@ body {
     text-align: center;
 }
 
-h1 {
+.profile-container {
+    margin-top: 30px;
+}
+
+.profile-table {
+    width: 80%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.profile-info {
+    padding-right: 20px; 
+    border-bottom: 2px solid #d3d; 
+    padding-bottom: 20px; 
+}
+
+.profile-image_solo img {
+    width: 250px; 
+    height: 250px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+}
+
+.profile-title {
+    font-size: 2em;
     color: #333;
 }
 
+.profile-city,
+.profile-email {
+    color: #777;
+}
+
+.profile-email {
+    font-size: 1.2em;
+}
+
+
+
 .grid-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: table;
+    flex-wrap: nowrap;
+    justify-content: normal;
     gap: 20px;
-    padding: 20px;
+    padding: 0px;
 }
 
 .profile-card {

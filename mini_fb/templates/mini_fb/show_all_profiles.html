@@ -1,3 +1,7 @@
+<!-- # File: show_all_profiles.html
+# Author: Mohammed Abaherah (abaherah@bu.edu) 20 Feb 2025
+# Description: display page for all profiles -->
+
 {% extends 'mini_fb/base.html' %}
 
 {% block content %}
@@ -5,10 +9,14 @@
 
 <main class="grid-container">
     {% for profile in profiles %}
+    
     <div class="profile-card">
-        <h2>{{ profile.first_name }} {{ profile.last_name }}</h2>
-        <h3>From {{ profile.city }}</h3>
+        <h2><a href="{% url 'show_profile' profile.pk %}">{{ profile.first_name }} {{ profile.last_name }}</a></h2>
+        <h3>Based in {{ profile.city }}</h3>
+        <h3>{{profile.email}}</h3>
+        <a href="{% url 'show_profile' profile.pk %}"> 
         <img src="{{ profile.image_url }}" alt="Profile image of {{ profile.first_name }}" width="150">
+    </a>
     </div>
     <hr>
     {% endfor %}
