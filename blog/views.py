@@ -28,8 +28,8 @@ class RandomArticleView(DetailView):
     template_name = "blog/article.html"
     context_object_name = "article"
 
-    #methods 
-    def get_object(self):
-        all_artiles = Article.objects.all()
-        article = random.choice(all_artiles)
-        return article
+#methods 
+def get_object(self):
+    all_artiles = Article.objects.all()
+    article = random.choice(all_artiles)
+    return article

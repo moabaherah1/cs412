@@ -10,12 +10,12 @@ class Profile(models.Model):
     '''Encapsulate the data of a fb user'''
 
     #define the data attributes of the Article Object
-firstname = models.TextField(blank=True)
-lastname = models.TextField(blank=True)
-city = models.TextField(blank=True)
-email = models.EmailField(unique=True)
-image_url = models.URLField(blank=True)
+    first_name = models.TextField(blank=True)
+    last_name = models.TextField(blank=True)
+    city = models.TextField(blank=True)
+    email = models.EmailField(unique=True)
+    image_url = models.URLField(blank=True)
 
 def __str__(self):
-    """return a string represenation of this model isntance"""
-    return f'{self.title} by {self.author}'
+    """Return a string representation of this profile"""
+    return f"{self.first_name} {self.last_name}"

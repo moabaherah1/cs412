@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'formdata',
     'blog',
+    'mini_fb',
 ]
 
 MIDDLEWARE = [
