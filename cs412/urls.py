@@ -27,4 +27,6 @@ urlpatterns = [
     path("about/", views.about, name="aboutpage"),
     path("formdata/", include("formdata.urls")),
     path("restaurant/", include("restaurant.urls")),
+    path("blog/", include("blog.urls")),
+    
 ]
