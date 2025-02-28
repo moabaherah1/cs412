@@ -50,6 +50,7 @@ class CreateStatusView(CreateView):
         return context
     
     def form_valid(self, form):
+        '''Within that method, you will need to (a) look up the Profile object by its pk. You can find this pk in self.kwargs['pk']. (b) attach this object to the profile attribute of the status message. '''
         profile = Profile.objects.get(pk=self.kwargs['pk'])
         form.instance.profile = profile 
         return super().form_valid(form)
