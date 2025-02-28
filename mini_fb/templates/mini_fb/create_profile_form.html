@@ -1,0 +1,20 @@
+<!-- # File: create_profile_form.html
+# Author: Mohammed Abaherah (abaherah@bu.edu) 27 Feb 2025
+# Description: create page for profile form -->
+
+
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+<h1>Create a new Profile</h1>
+
+<!-- display the HTML form -->
+<form action="{% url 'create_profile' %}" method="POST">
+    {% csrf_token %}
+    <table>
+    {{form.as_table}}
+    </table>
+
+    <input type="submit" name="submit" value="Submit">
+</form>
+{% endblock %}

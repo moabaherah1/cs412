@@ -19,6 +19,7 @@
                 <h1 class = "profile-title"> {{ profile.last_name }}</h1>
                 <h2 class="profile-city">from {{ profile.city }}</h2>
             </td>
+
             
             
         </tr>
@@ -27,11 +28,19 @@
                 <h3>{{ profile.email }}</h3>
             </td>
         </tr>
-        <tr>
-            <a href="{% url 'show_all_profiles' %}">View All</a></h2>
-        </tr>
+
     </table>
 
+    {% for StatusMessage in profile.get_status_messages %}
+    <div>
+        <h2>{{StatusMessage.time_stamp}}</h2>
+        <p>
+            {{StatusMessage.message}}
+        </p>
+    </div>
+    {% endfor %}
+
 </main>
+
 
 {% endblock %}
