@@ -5,8 +5,8 @@
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView
-from .models import Profile
-from .forms import CreateProfileForm
+from .models import Profile, StatusMessage
+from .forms import CreateProfileForm, CreateStatusMessageForm
 
 class ShowAllProfilesView(ListView):
     '''Define a view class to show all Profiles'''
@@ -33,3 +33,28 @@ class CreateProfileView(CreateView):
 
         return self.object.get_absolute_url()
 
+
+class CreateStatusView(CreateView):
+    '''Define a view class for the status form'''
+
+    model = StatusMessage
+    form_class = CreateStatusMessageForm
+    template_name = "mini_fb/create_status_form.html"
+
+
+    
+    def get_context_data(self, **kwargs):
+        '''To have access to this as a context variable, you will need to implement the special method get_context_data on the CreateStatusMessageView class. '''
+        context = super().get_context_data(**kwargs)
+        context['profile'] = Profile.objects.get(pk=self.kwargs['pk'])
+        return context
+    
+    def form_valid(self, form):
+        profile = Profile.objects.get(pk=self.kwargs['pk'])
+        form.instance.profile = profile 
+        return super().form_valid(form)
+        
+    def get_success_url(self) -> str:
+        '''Return the URL to redirect to after successfully submitting form.'''
+
+        return self.object.get_absolute_url()

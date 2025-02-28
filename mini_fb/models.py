@@ -38,3 +38,7 @@ class StatusMessage(models.Model):
     def __str__(self):
         '''Return a string representation of this Status Message object.'''
         return f'{self.time_stamp, self.message}'
+    
+    def get_absolute_url(self) -> str:
+        '''returns the reverse of the profile so we can return the user to the correct url after submitting'''
+        return reverse('show_profile', kwargs= {"pk":self.profile.pk})
