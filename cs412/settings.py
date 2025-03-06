@@ -120,21 +120,18 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-]
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = 'static/' # note: no leading slash!
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL= "media/"  # note: no leading slash!
@@ -143,10 +140,6 @@ import socket
 CS_DEPLOYMENT_HOSTNAME = 'cs-webapps.bu.edu'
 
 if socket.gethostname() == CS_DEPLOYMENT_HOSTNAME:
-    STATIC_URL = '/abaherah/static/'
-    MEDIA_URL = '/abaherah/media/'
-
-
-#Declarations to reference media files
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-MEDIA_URL = "/media/"
+    STATIC_URL = '/username/static/'
+    MEDIA_URL = '/username/media/'
+    
