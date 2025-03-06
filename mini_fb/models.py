@@ -74,3 +74,5 @@ class StatusImage(models.Model):
     def __str__(self):
         '''Return a string representation of this StatusImage object.'''
         return f'{self.statusmessage}'
+    
+

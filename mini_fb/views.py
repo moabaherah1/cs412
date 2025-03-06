@@ -4,9 +4,9 @@
 
 from django.shortcuts import render
 from django.urls import reverse
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from .models import Profile, StatusMessage, Image, StatusImage
-from .forms import CreateProfileForm, CreateStatusMessageForm
+from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm
 
 class ShowAllProfilesView(ListView):
     '''Define a view class to show all Profiles'''
@@ -74,3 +74,15 @@ class CreateStatusView(CreateView):
         '''Return the URL to redirect to after successfully submitting form.'''
 
         return self.object.get_absolute_url()
+    
+class UpdateProfileView(UpdateView):
+    '''a class-based view called UpdateProfileView, which inherits from the generic UpdateView class'''
+
+    model = Profile
+    form_class = UpdateProfileForm
+    template_name = 'mini_fb/update_profile_form.html'
+
+    def get_success_url(self) -> str:
+        '''Return the URL to redirect to after successfully submitting form.'''
+
+        return reverse('show_profile', kwargs={'pk':self.object.pk})

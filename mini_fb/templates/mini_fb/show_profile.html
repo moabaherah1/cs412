@@ -30,7 +30,8 @@
         </tr>
 
     </table>
-    <a href="{% url 'create_status' pk=profile.pk %}">Create a new status</a>
+    <a href="{% url 'create_status' pk=profile.pk %}">Create Status</a>
+    <a href="{% url 'update_profile' pk=profile.pk %}">Update Profile</a>
 
     {% for StatusMessage in profile.get_status_messages %}
     <div>
