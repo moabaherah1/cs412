@@ -37,8 +37,40 @@ class StatusMessage(models.Model):
 
     def __str__(self):
         '''Return a string representation of this Status Message object.'''
-        return f'{self.time_stamp, self.message}'
+        return f'{self.time_stamp, self.message, self.profile}'
     
     def get_absolute_url(self) -> str:
         '''returns the reverse of the profile so we can return the user to the correct url after submitting'''
         return reverse('show_profile', kwargs= {"pk":self.profile.pk})
+    
+
+    def get_images(self):
+        '''use the ORM to find all Images that are related to this StatusMessage, and then return a list or QuerySetof those Image(s)'''
+        images = Image.objects.filter(statusimage__statusmessage=self)
+
+        return images
+
+
+
+
+class Image(models.Model): 
+    '''models the image attribute of a status message'''
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    image = models.ImageField(blank=True)
+    time_stamp = models.DateTimeField(auto_now=True)
+    caption = models.TextField(blank=True)
+
+    def __str__(self):
+        '''Return a string representation of this Image object.'''
+        return f'{self.caption}'
+    
+
+class StatusImage(models.Model):
+    '''connects image to statusimage with fk'''
+
+    image = models.ForeignKey(Image, on_delete=models.CASCADE)
+    statusmessage = models.ForeignKey(StatusMessage, on_delete=models.CASCADE)
+
+    def __str__(self):
+        '''Return a string representation of this StatusImage object.'''
+        return f'{self.statusmessage}'

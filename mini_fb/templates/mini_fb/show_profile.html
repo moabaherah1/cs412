@@ -34,12 +34,19 @@
 
     {% for StatusMessage in profile.get_status_messages %}
     <div>
-        <h2>{{StatusMessage.time_stamp}}</h2>
-        <p>
-            {{StatusMessage.message}}
-        </p>
+        <h2>{{ StatusMessage.time_stamp }}</h2>
+        <p>{{ StatusMessage.message }}</p>
+
+        {% for image in StatusMessage.get_images %}
+            <img src="{{ image.image.url }}" alt="{{ image.caption }}">
+        {% empty %}
+            <p>No images attached.</p>
+        {% endfor %}
     </div>
-    {% endfor %}
+{% endfor %}
+
+
+
 
 </main>
 

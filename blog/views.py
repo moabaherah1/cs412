@@ -2,9 +2,9 @@ from django.shortcuts import render
 
 
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView
-from .models import Article
-from .forms import CreateArticleForm, CreateCommentForm
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from .models import Article, Comment
+from .forms import CreateArticleForm, CreateCommentForm, UpdateArticleForm
 import random
 from django.urls import reverse
 
@@ -45,6 +45,13 @@ class CreateArticleView(CreateView):
 
     form_class = CreateArticleForm
     template_name = "blog/create_article_form.html"
+
+    def form_valid(self, form):
+        '''Override the default to add debug info'''
+        print(f'CreateArticleView.form_valid(): {form.cleaned_data}')
+
+        return super().form_valid(form)
+    
 
 class CreateCommentView(CreateView):
     '''A view to create a new comment and save it to the database.'''
@@ -98,3 +105,31 @@ class CreateCommentView(CreateView):
         return reverse('article', kwargs={'pk':pk})
 
 
+class UpdateArticleView(UpdateView):
+
+
+    model = Article 
+
+    form_class = UpdateArticleForm
+    template_name = "blog/update_article_form.html"
+
+
+class DeleteCommentView(DeleteView):
+    '''A view to delete a comment and remove it from the database.'''
+
+    template_name = "blog/delete_comment_form.html"
+    model = Comment
+    context_object_name = 'comment'
+    
+    def get_success_url(self):
+        '''Return a the URL to which we should be directed after the delete.'''
+
+        # get the pk for this comment
+        pk = self.kwargs.get('pk')
+        comment = Comment.objects.get(pk=pk)
+        
+        # find the article to which this Comment is related by FK
+        article = comment.article
+        
+        # reverse to show the article page
+        return reverse('article', kwargs={'pk':article.pk})

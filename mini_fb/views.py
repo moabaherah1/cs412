@@ -41,8 +41,6 @@ class CreateStatusView(CreateView):
     form_class = CreateStatusMessageForm
     template_name = "mini_fb/create_status_form.html"
 
-
-    
     def get_context_data(self, **kwargs):
         '''To have access to this as a context variable, you will need to implement the special method get_context_data on the CreateStatusMessageView class. '''
         context = super().get_context_data(**kwargs)
