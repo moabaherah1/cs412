@@ -140,3 +140,41 @@ form input[type="submit"] {
 form input[type="submit"]:hover {
     background-color: #005fa3;
 }
+
+
+.image111 {
+    width: 400px;  
+    height: auto;  
+    border-radius: 0px;  
+    border: 2px solid #c60e0e;  
+}
+
+.delete_message {
+    background-color: #cd2d05; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.update_message {
+    background-color: #291bbd; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.center {
+    margin: auto;
+    width: 50%;
+    border: 3px solid green;
+    padding: 10px;
+  }
+  
