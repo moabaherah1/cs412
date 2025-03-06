@@ -1,0 +1,23 @@
+<!-- mini_fb/templates/mini_fb/delete_comment_form.html -->
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+
+<h3>Are you sure you want to delete this status message?</h3>
+
+{{statusmessage.message}}
+<p>
+
+</p>
+
+<form method='POST'>
+    {% csrf_token %}
+    <input type='submit' value="Delete">
+</form>
+
+
+<form action="{% url 'show_profile' statusmessage.profile.pk %}" method='GET' >
+    {% csrf_token %}
+    <input type='submit' value="Cancel">
+</form>
+{% endblock %}

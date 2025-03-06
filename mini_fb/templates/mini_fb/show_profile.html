@@ -37,12 +37,16 @@
     <div>
         <h2>{{ StatusMessage.time_stamp }}</h2>
         <p>{{ StatusMessage.message }}</p>
-
         {% for image in StatusMessage.get_images %}
-            <img src="{{ image.image.url }}" alt="{{ image.caption }}" class = "image111">
-        {% empty %}
-            <p>No images attached.</p>
-        {% endfor %}
+        <img src="{{ image.image.url }}" alt="{{ image.caption }}" class = "image111">
+    {% empty %}
+        <p>No images attached.</p>
+    {% endfor %}
+        <p>
+            <a href="{% url 'delete_status' StatusMessage.pk %}" class = "delete_message">Delete </a>
+            <a href="{% url 'update_status' StatusMessage.pk %}" class = "update_message">Update </a>
+        </p>
+
     </div>
 {% endfor %}
 

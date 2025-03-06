@@ -4,9 +4,9 @@
 
 from django.shortcuts import render
 from django.urls import reverse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Profile, StatusMessage, Image, StatusImage
-from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm
+from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm, UpdateStatusMessageForm
 
 class ShowAllProfilesView(ListView):
     '''Define a view class to show all Profiles'''
@@ -86,3 +86,45 @@ class UpdateProfileView(UpdateView):
         '''Return the URL to redirect to after successfully submitting form.'''
 
         return reverse('show_profile', kwargs={'pk':self.object.pk})
+
+
+class DeleteMessageStatusView(DeleteView):
+    '''a class-based view to delete a status message'''
+    
+    template_name = "mini_fb/delete_status_form.html"
+    model = StatusMessage
+    context_object_name = 'statusmessage'
+    
+    def get_success_url(self):
+        '''Return a the URL to which we should be directed after the delete.'''
+
+        # get the pk for this status message
+        pk = self.kwargs.get('pk')
+        statusmessage = StatusMessage.objects.get(pk=pk)
+        
+        # reverse to show the profile page
+        return reverse('show_profile', kwargs={'pk':statusmessage.profile.pk})
+
+
+class UpdateStatusMessageView(UpdateView):
+    '''a class-based view to update a status message'''
+
+    template_name = "mini_fb/update_status_form.html"
+    model = StatusMessage
+    form_class = UpdateStatusMessageForm
+    
+    
+    # def form_valid(self, form):
+    #     print(form.cleaned_data)
+        
+    #     return super().form_valid(form)
+
+    def get_success_url(self):
+        '''Return a the URL to which we should be directed after the update.'''
+
+        # get the pk for this status message
+        pk = self.kwargs.get('pk')
+        statusmessage = StatusMessage.objects.get(pk=pk)
+        
+        # reverse to show the profile page
+        return reverse('show_profile', kwargs={'pk':statusmessage.profile.pk})

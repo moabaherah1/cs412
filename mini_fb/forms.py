@@ -33,5 +33,12 @@ class UpdateProfileForm(forms.ModelForm):
         '''which relates this form to the Profile model'''
         model = Profile
         fields = ['city', 'email', 'image_url']
-        
-    
+
+
+class UpdateStatusMessageForm(forms.ModelForm):
+    '''updates an existing message'''
+
+    class Meta:
+        '''which relates this form to the status model'''
+        model = StatusMessage
+        fields = ['message']
