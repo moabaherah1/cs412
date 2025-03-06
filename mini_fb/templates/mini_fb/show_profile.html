@@ -38,7 +38,7 @@
         <p>{{ StatusMessage.message }}</p>
 
         {% for image in StatusMessage.get_images %}
-            <img src="{{ image.image.url }}" alt="{{ image.caption }}">
+            <img src="{{ image.image.url }}" alt="{{ image.caption }}" class = "image111">
         {% empty %}
             <p>No images attached.</p>
         {% endfor %}

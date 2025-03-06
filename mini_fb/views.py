@@ -5,7 +5,7 @@
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView
-from .models import Profile, StatusMessage
+from .models import Profile, StatusMessage, Image, StatusImage
 from .forms import CreateProfileForm, CreateStatusMessageForm
 
 class ShowAllProfilesView(ListView):
@@ -49,8 +49,25 @@ class CreateStatusView(CreateView):
     
     def form_valid(self, form):
         '''Within that method, you will need to (a) look up the Profile object by its pk. You can find this pk in self.kwargs['pk']. (b) attach this object to the profile attribute of the status message. '''
+        
+        
         profile = Profile.objects.get(pk=self.kwargs['pk'])
         form.instance.profile = profile 
+        # save the status message to database
+
+
+        sm = form.save()
+        files = self.request.FILES.getlist('files')
+
+        for file in files:
+            image = Image(profile = profile)
+            image.image = file 
+            image.save()
+
+            status_image = StatusImage(image = image, statusmessage = sm)
+            status_image.save()
+        
+
         return super().form_valid(form)
         
     def get_success_url(self) -> str:
