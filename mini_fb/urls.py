@@ -3,7 +3,7 @@
 # Description: Has the paths to all the correct views
 
 from django.urls import path
-from .views import ShowAllProfilesView, ShowProfilePageView, CreateProfileView, CreateStatusView, UpdateProfileView, DeleteMessageStatusView, UpdateStatusMessageView
+from .views import ShowAllProfilesView, ShowProfilePageView, CreateProfileView, CreateStatusView, UpdateProfileView, DeleteMessageStatusView, UpdateStatusMessageView, AddFriendView, ShowFriendSuggestionsView
 
 '''our url patterns so we can link to the page we want to show'''
 urlpatterns = [
@@ -15,6 +15,8 @@ urlpatterns = [
     path('profile/<int:pk>/update', UpdateProfileView.as_view(), name='update_profile'), 
     path('status/<int:pk>/delete', DeleteMessageStatusView.as_view(), name='delete_status'), 
     path('status/<int:pk>/update', UpdateStatusMessageView.as_view(), name='update_status'), 
+    path('profile/<int:pk>/add_friend/<int:friend_pk>', AddFriendView.as_view(), name='add_friend'),
+    path('profile/<int:pk>/friend_suggestions', ShowFriendSuggestionsView.as_view(), name = 'friend_suggestions'),
 
 
 ]

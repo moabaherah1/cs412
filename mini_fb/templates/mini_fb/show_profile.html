@@ -29,9 +29,38 @@
             </td>
         </tr>
 
+
+        <table class="friends-table">
+            <tr>
+                <th>Friend</th>
+                <th>Profile Picture</th>
+            </tr>
+            {% for friend in profile.get_friends %}
+                <tr>
+                    <td>
+                        <a href="{% url 'show_profile' pk=friend.pk %}">
+                            {{ friend.first_name }} {{ friend.last_name }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'show_profile' pk=friend.pk %}">
+                            <img src="{{ friend.image_url }}" alt="Profile image of {{ friend.first_name }}" class="friend-image">
+                        </a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="2">No friends to display.</td>
+                </tr>
+            {% endfor %}
+        </table>
+        
+
+
     </table>
     <a href="{% url 'create_status' pk=profile.pk %}">Create Status</a>
     <a href="{% url 'update_profile' pk=profile.pk %}">Update Profile</a>
+    <a href="{% url 'friend_suggestions' pk=profile.pk %}">Friend Suggestions!</a>
 
     {% for StatusMessage in profile.get_status_messages %}
     <div>

@@ -27,6 +27,57 @@ class Profile(models.Model):
     def get_absolute_url(self) -> str:
         '''returns the reverse of the profile so we can return the user to the correct url after submitting'''
         return reverse('show_profile', kwargs= {"pk":self.pk})
+    
+    def get_friends(self):
+        '''return a list of friends profiles'''
+
+        friends = []
+
+        friend1 = Friend.objects.filter(profile1 = self)
+        for friend in friend1:
+            friends.append(friend.profile2)
+
+
+        friend2 = Friend.objects.filter(profile2 = self)
+        for friend in friend2:
+            friends.append(friend.profile1)
+
+        return friends
+    
+    def add_friend(self, other):
+        ''' This method takes a parameter other, which refers to another Profile instance, 
+        and the effect of the method should be add a Friend relation for the two Profiles: self and other.'''
+        if (self == other):
+            return
+        
+        existing_friend = Friend.objects.filter(models.Q(profile1=self, profile2 = other) | models.Q(profile1 = other, profile2 = self)).exists()
+
+        if (not existing_friend ):
+            new_friend = Friend(profile1 = self, profile2 = other)
+
+            new_friend.save()
+
+    def get_friend_suggestions(self):
+        '''will return a list (or QuerySet) of possible friends for a Profile'''
+
+        all_profiles = Profile.objects.exclude(pk = self.pk)
+        friends = Friend.objects.filter(models.Q(profile1 = self) | models.Q(profile2 = self))
+        friend_profiles = []
+        for friend in friends:
+            if friend.profile1 == self :
+                friend_profiles.append(friend.profile2)
+            else:
+                friend_profiles.append(friend.profile1)
+
+        suggestions = []
+        for profile in all_profiles:
+            if profile not in friend_profiles:
+                suggestions.append(profile)
+
+        return suggestions
+
+
+
 
 
 class StatusMessage(models.Model): 
@@ -76,3 +127,13 @@ class StatusImage(models.Model):
         return f'{self.statusmessage}'
     
 
+class Friend(models.Model): 
+    '''connects profile to another profile ie) friend'''
+    
+    profile1 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='profile1')
+    profile2 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='profile2')
+    time_stamp = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        '''Return a spring representation of '''
+        return f'{self.profile1} & {self.profile2}'

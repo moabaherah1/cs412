@@ -1,0 +1,54 @@
+<!-- # File: friend_suggestions.html
+# Author: Mohammed Abaherah (abaherah@bu.edu) 21 Mar 2025
+# Description: Displays friend suggestions for a single profile along with links to add friends -->
+
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+
+
+<main class="profile-container">
+
+    <h1> People {{profile.first_name}} {{profile.last_name}} may know:</h1>
+
+    <table class="profile-table">
+        <tr>
+            <th>Suggestion</th>            
+            <th>Image</th>
+            <th>Add Friend</th>
+        </tr>
+        
+        {% for suggestion in profile.get_friend_suggestions %}
+            <tr>
+                <td>
+                    <a href="{% url 'show_profile' pk=suggestion.pk %}">
+                        {{ suggestion.first_name }} {{ suggestion.last_name }}
+                    </a>
+                </td>
+
+                <td>
+                    <a href="{% url 'show_profile' pk=suggestion.pk %}">
+                        <img src="{{ suggestion.image_url }}" class="friend-image">
+
+                    </a>
+                </td>
+
+                <td>
+                    <a href="{% url 'add_friend' profile.pk suggestion.pk %}" >Add Friend </a>
+                </td>
+
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">No friend suggestions available.</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <a href="{% url 'show_profile' pk=profile.pk %}">Back to Profile</a>
+
+</main>
+
+
+{% endblock %}
+

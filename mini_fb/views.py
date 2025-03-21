@@ -2,10 +2,11 @@
 # Author: Mohammed Abaherah (abaherah@bu.edu) 20 Feb 2025
 # Description: Defines our classes
 
-from django.shortcuts import render
+
+from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Profile, StatusMessage, Image, StatusImage
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
+from .models import Profile, StatusMessage, Image, StatusImage, Friend
 from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm, UpdateStatusMessageForm
 
 class ShowAllProfilesView(ListView):
@@ -128,3 +129,32 @@ class UpdateStatusMessageView(UpdateView):
         
         # reverse to show the profile page
         return reverse('show_profile', kwargs={'pk':statusmessage.profile.pk})
+    
+class AddFriendView(View):
+    '''a class-based view to add a friend'''
+
+    def dispatch(self, request, *args, **kwargs):
+            profile_pk = self.kwargs.get('pk')
+            friend_pk = self.kwargs.get('friend_pk')
+
+            profile = Profile.objects.get(pk = profile_pk)
+            friend_profile = Profile.objects.get(pk = friend_pk)
+
+            profile.add_friend(friend_profile)
+
+            return redirect(reverse('show_profile', kwargs={'pk':profile.pk}))
+    
+class ShowFriendSuggestionsView(DetailView):
+    '''a class-based view to show friend suggestions'''
+    
+    model = Profile
+    template_name = 'mini_fb/friend_suggestions.html'
+    context_object_name = 'profile'
+
+    def get_context_data(self, **kwargs):
+        '''Override the default context to add friend suggestions.'''
+        context = super().get_context_data(**kwargs)
+        profile =self.get_object()
+        context['friend_suggestions'] = profile.get_friend_suggestions()
+        
+        return context
