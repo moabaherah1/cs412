@@ -1,0 +1,46 @@
+<!-- # File: news_feed.html
+# Author: Mohammed Abaherah (abaherah@bu.edu) 21 Mar 2025
+# Description: Displays the news feed for a single profile along with their friends' status messages -->
+
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+
+<main class="profile-container">
+    <h1> News Feed</h1>
+    <table class="profile-table">
+
+        {% for status in profile.get_news_feed %}
+        <tr> 
+            <td>
+                <a href="{% url 'show_profile' pk=status.profile.pk %}">
+                    <img src = "{{status.profile.image_url}}" class = "friend-image">
+                    {{ status.profile.first_name }} {{ status.profile.last_name }}
+                </a>
+            </td>
+            <td>
+                <p>{{ status.message }}</p>
+                <p><small>Posted on: {{ status.time_stamp }}</small></p>
+                
+                {% for image in status.get_images %}
+                    <img src="{{ image.image.url }}" alt="{{ image.caption }}" class="image111">
+                {% empty %}
+                    <p>No images attached.</p>
+                {% endfor %}
+            </td>
+
+            
+        </tr>
+        {% empty %}
+            <tr>
+                <td colspan="3">No status messages to display.</td>
+            </tr>
+        {% endfor %}
+
+    </table>
+
+    <a href="{% url 'show_profile' pk=profile.pk %}">Back to Profile</a>
+    <a href="{% url 'show_all_profiles' %}">All Profiles</a>
+
+
+    {% endblock %}

@@ -12,11 +12,7 @@
     <h1> People {{profile.first_name}} {{profile.last_name}} may know:</h1>
 
     <table class="profile-table">
-        <tr>
-            <th>Suggestion</th>            
-            <th>Image</th>
-            <th>Add Friend</th>
-        </tr>
+
         
         {% for suggestion in profile.get_friend_suggestions %}
             <tr>

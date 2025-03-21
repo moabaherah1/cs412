@@ -158,3 +158,17 @@ class ShowFriendSuggestionsView(DetailView):
         context['friend_suggestions'] = profile.get_friend_suggestions()
         
         return context
+
+class ShowNewsFeedView(DetailView):
+    '''a class-based view to show the News Feed'''
+    
+    model = Profile
+    template_name = 'mini_fb/news_feed.html'
+    context_object_name = 'profile'
+
+    def get_context_data(self, **kwargs):
+        '''Override the default context to add news feed .'''
+        context = super().get_context_data(**kwargs)
+        profile =self.get_object()
+        context['news_feed'] = profile.get_news_feed()
+        return context

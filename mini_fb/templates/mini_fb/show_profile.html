@@ -61,6 +61,7 @@
     <a href="{% url 'create_status' pk=profile.pk %}">Create Status</a>
     <a href="{% url 'update_profile' pk=profile.pk %}">Update Profile</a>
     <a href="{% url 'friend_suggestions' pk=profile.pk %}">Friend Suggestions!</a>
+    <a href="{% url 'news_feed' pk=profile.pk %}">News Feed</a>
 
     {% for StatusMessage in profile.get_status_messages %}
     <div>

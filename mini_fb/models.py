@@ -76,6 +76,15 @@ class Profile(models.Model):
 
         return suggestions
 
+    def get_news_feed(self):
+        ''' on the Profile object, which will return a list (or QuerySet) of all StatusMessages for the profile on which the method was called, as well as all of the friends of that profile.'''
+
+        profile_statuses = StatusMessage.objects.filter(profile = self)
+        friends = self.get_friends()
+        friend_statuses = StatusMessage.objects.filter(profile__in = friends)
+        all_statuses = profile_statuses | friend_statuses
+
+        return all_statuses
 
 
 
