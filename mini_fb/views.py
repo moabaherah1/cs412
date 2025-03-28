@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
 from .models import Profile, StatusMessage, Image, StatusImage, Friend
 from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm, UpdateStatusMessageForm
+from django.contrib.auth.forms import UserCreationForm
 
 class ShowAllProfilesView(ListView):
     '''Define a view class to show all Profiles'''
@@ -25,14 +26,31 @@ class ShowProfilePageView(DetailView):
 class CreateProfileView(CreateView):
     '''Define a view class to show the profile form'''
     
-    model = Profile
     form_class = CreateProfileForm
     template_name = "mini_fb/create_profile_form.html"
 
+
+    def get_context_data(self, **kwargs):
+        '''Add the UserCreationForm to the context'''
+        context = super().get_context_data(**kwargs)
+        context['user_creation_form'] = UserCreationForm()  # Add the user form to context
+        return context
+    
     def get_success_url(self) -> str:
         '''Return the URL to redirect to after successfully submitting form.'''
 
         return self.object.get_absolute_url()
+
+    def form_valid(self, form):
+        '''Handle both forms when valid'''
+        user_form = UserCreationForm(self.request.POST)
+        
+        if user_form.is_valid():
+            user = user_form.save()  
+            profile = form.save(commit=False)
+            profile.user = user 
+            profile.save()  
+            return redirect('show_profile', pk=user.profile.pk)
 
 
 class CreateStatusView(CreateView):
@@ -88,10 +106,17 @@ class UpdateProfileView(UpdateView):
     form_class = UpdateProfileForm
     template_name = 'mini_fb/update_profile_form.html'
 
+    
+    def get_object(self, queryset=None):
+        '''Override the default get_object to get the logged-in user's first profile or most recent one'''
+        profile = Profile.objects.filter(user=self.request.user).first()  # Get the first profile for the user
+        return profile
+            
     def get_success_url(self) -> str:
         '''Return the URL to redirect to after successfully submitting form.'''
 
-        return reverse('show_profile', kwargs={'pk':self.object.pk})
+        return reverse('show_profile', kwargs={'pk':self.object.pk}
+        )    
 
 
 class DeleteMessageStatusView(DeleteView):
@@ -139,10 +164,9 @@ class AddFriendView(View):
     '''a class-based view to add a friend'''
 
     def dispatch(self, request, *args, **kwargs):
-            profile_pk = self.kwargs.get('pk')
             friend_pk = self.kwargs.get('friend_pk')
 
-            profile = Profile.objects.get(pk = profile_pk)
+            profile = Profile.objects.get(user = request.user)
             friend_profile = Profile.objects.get(pk = friend_pk)
 
             profile.add_friend(friend_profile)
@@ -156,13 +180,18 @@ class ShowFriendSuggestionsView(DetailView):
     template_name = 'mini_fb/friend_suggestions.html'
     context_object_name = 'profile'
 
-    def get_context_data(self, **kwargs):
-        '''Override the default context to add friend suggestions.'''
-        context = super().get_context_data(**kwargs)
-        profile =self.get_object()
-        context['friend_suggestions'] = profile.get_friend_suggestions()
+    def get(self, request, *args, **kwargs):
+        '''Override the default context to add news feed .'''
+        profile = Profile.objects.get(user=request.user)
+
+        friend_suggestions = profile.get_friend_suggestions()
         
-        return context
+        context = {
+                    'profile': profile,
+                    'friends_suggestions': friend_suggestions
+                }
+        
+        return render(request, self.template_name, context)
 
 class ShowNewsFeedView(DetailView):
     '''a class-based view to show the News Feed'''
@@ -171,9 +200,14 @@ class ShowNewsFeedView(DetailView):
     template_name = 'mini_fb/news_feed.html'
     context_object_name = 'profile'
 
-    def get_context_data(self, **kwargs):
+    def get(self, request, *args, **kwargs):
         '''Override the default context to add news feed .'''
-        context = super().get_context_data(**kwargs)
-        profile =self.get_object()
-        context['news_feed'] = profile.get_news_feed()
-        return context
+        profile = Profile.objects.get(user=request.user)
+        
+        context = {
+                    'profile': profile,
+                    'news_feed': profile.get_news_feed()
+                }
+        
+        return render(request, self.template_name, context)
+    

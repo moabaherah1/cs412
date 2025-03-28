@@ -24,7 +24,10 @@
                  URLs for logged in users only -->
                  {% if request.user.is_authenticated %}
                 <ul> 
-                    
+                    {% if user.profile %}
+                    <li><a href="{% url 'show_profile' pk=user.profile.pk %}">Your Profile</a></li>
+
+                {% endif %}
 
                  <form id="logout-form" method="post" action="{% url 'logout' %}">
                      {% csrf_token %}

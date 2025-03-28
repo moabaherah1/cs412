@@ -17,6 +17,7 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='mini_fb/login.html'), name = 'login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='show_all_profiles'), name='logout'), ## NEW
 
+
      #Specific ones that we are working on removing the pk for
     path('profile/create_status', CreateStatusView.as_view(), name='create_status'), 
     path('profile/update', UpdateProfileView.as_view(), name='update_profile'), 

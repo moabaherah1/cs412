@@ -10,7 +10,7 @@
     <h1> News Feed</h1>
     <table class="profile-table">
 
-        {% for status in profile.get_news_feed %}
+        {% for status in news_feed %}
         <tr> 
             <td>
                 <a href="{% url 'show_profile'  pk=status.profile.pk %}">
@@ -39,7 +39,7 @@
 
     </table>
 
-    <a href="{% url 'show_profile' %}">Back to Profile</a>
+    <a href="{% url 'show_profile' pk=profile.pk %}">Back to Profile</a>
     <a href="{% url 'show_all_profiles' %}">All Profiles</a>
 
 
