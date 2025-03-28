@@ -108,7 +108,7 @@ nav ul li a:hover {
 
 .profile-image_solo img {
     width: 200px;
-    height: 200px;
+    height: 150px;
     border-radius: 50%;
     object-fit: cover;
 }
@@ -212,4 +212,5 @@ form input[type="submit"]:hover {
     border: 3px solid green;
     padding: 10px;
   }
+  
   
