@@ -13,7 +13,7 @@
         {% for status in profile.get_news_feed %}
         <tr> 
             <td>
-                <a href="{% url 'show_profile' pk=status.profile.pk %}">
+                <a href="{% url 'show_profile'  pk=status.profile.pk %}">
                     <img src = "{{status.profile.image_url}}" class = "friend-image">
                     {{ status.profile.first_name }} {{ status.profile.last_name }}
                 </a>
@@ -39,7 +39,7 @@
 
     </table>
 
-    <a href="{% url 'show_profile' pk=profile.pk %}">Back to Profile</a>
+    <a href="{% url 'show_profile' %}">Back to Profile</a>
     <a href="{% url 'show_all_profiles' %}">All Profiles</a>
 
 

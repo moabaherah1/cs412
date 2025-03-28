@@ -9,7 +9,7 @@
 <h1>Create a new Status Message</h1>
 
 <!-- display the HTML form -->
-<form action="{% url 'create_status' pk=profile.pk %}" method="POST" enctype="multipart/form-data">
+<form action="{% url 'create_status' %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     
     <table>

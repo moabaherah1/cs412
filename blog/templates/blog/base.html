@@ -1,3 +1,4 @@
+<!-- templates/blog/base.html -->
 {% load static %}
 
 <html>
@@ -7,19 +8,42 @@
     </head>
 
     <body>
-        
         <head>
             <h1>Our Blog</h1>
             <nav>
                 <ul>
-                    <li><a href = "{%url 'random' %}">Random </a> </li>
-                    <li><a href = "{%url 'show_all' %}">Show All </a> </li>
-                    <li><a href = "{%url 'create_article' %}">Create</a> </li>
+					<!-- URLs for users who are not logged in -->
+                    <li><a href="{% url 'random' %}">Random</a></li>
+                    <li><a href="{% url 'show_all' %}">Show All</a></li>
+
+                    <!-- URLs for logged in users only -->
+                    {% if request.user.is_authenticated %}
+                    <li><a href="{% url 'create_article' %}">Create</a></li>
+                    <form id="logout-form" method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+
+                    <!-- URLs for users who are not logged in -->
+                    {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    {% endif %}
                 </ul>
+                <hr>
+                {% if request.user.is_authenticated %}
+                Logged in as: {{request.user}}
+                {% else %}
+                Not logged in.
+                {% endif %}
             </nav>
         </head>
 
+        <!-- substitute in the specific content here -->
         {% block content %}
         {% endblock %}
+
     </body>
+
 </html>
+
+

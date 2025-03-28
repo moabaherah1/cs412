@@ -4,17 +4,23 @@
 
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 # Create your models here.
+
 
 class Profile(models.Model):
     '''Encapsulate the data of a fb user'''
 
     #define the data attributes of the Article Object
+    
     first_name = models.TextField(blank=True)
     last_name = models.TextField(blank=True)
     city = models.TextField(blank=True)
     email = models.EmailField(unique=True)
     image_url = models.URLField(blank=True)
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
 
     def __str__(self):
         """Return a string representation of this profile"""
@@ -146,3 +152,13 @@ class Friend(models.Model):
     def __str__(self):
         '''Return a spring representation of '''
         return f'{self.profile1} & {self.profile2}'
+
+# class ContextMixIn(models.Model):
+#     '''Creating a custom MixIn for each view to get the certain context we want  '''
+
+#     model = User
+#     def get_context_data(self, **kwargs):
+#         '''method to get the pk of each profile page'''
+#         context = super().get_context_data(**kwargs)
+#         context['profile'] = Profile.objects.get(user=self.request.user)
+#         return context

@@ -43,17 +43,22 @@ class CreateStatusView(CreateView):
     template_name = "mini_fb/create_status_form.html"
 
     def get_context_data(self, **kwargs):
-        '''To have access to this as a context variable, you will need to implement the special method get_context_data on the CreateStatusMessageView class. '''
+        '''To have access to this as a context variable, you will need to implement the special method get_context_data on the CreateStatusMessageView class.'''
         context = super().get_context_data(**kwargs)
-        context['profile'] = Profile.objects.get(pk=self.kwargs['pk'])
+        context['profile'] = self.get_object()  # Access the profile object here
         return context
+    
+    def get_object(self):
+        '''Override to get the Profile object for the currently logged-in user.'''
+        # Get the Profile associated with the logged-in user
+        return Profile.objects.get(user=self.request.user)
     
     def form_valid(self, form):
         '''Within that method, you will need to (a) look up the Profile object by its pk. You can find this pk in self.kwargs['pk']. (b) attach this object to the profile attribute of the status message. '''
         
         
-        profile = Profile.objects.get(pk=self.kwargs['pk'])
-        form.instance.profile = profile 
+        profile = self.get_object()  
+        form.instance.profile = profile
         # save the status message to database
 
 
