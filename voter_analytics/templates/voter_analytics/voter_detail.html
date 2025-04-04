@@ -1,0 +1,59 @@
+<!-- File: voter_detail.html
+Author: Mohammed Abaherah (abaherah@bu.edu) 4 April 2025
+Description: our result page for one voter-->
+
+{% extends 'voter_analytics/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Showing Result for {{v.first_name}} {{v.last_name}}</h1>
+    <table>
+        <tr>
+            <th>Name</th> <br>
+            <th>Street Information</th>
+            <th>Zip</th>
+            <th>Date Of Birth</th>
+            <th>Date Of Registration</th>
+
+            <th>Party</th>
+            <th>Precinct</th>
+            <th>Voter_Score</th>
+
+            <th>v20state </th>
+            <th>v21town </th>
+            <th>v21primary </th>
+            <th>v22general </th>
+            <th>v23town </th>
+  
+        </tr>
+
+        <tr>
+            <td> 
+                {{v.first_name}} {{v.last_name}} 
+            </td><br>
+            <td>{{v.Street_Name}}, {{v.Street_Number}}, {% if v.Apartment_Number %}, Apt {{ v.Apartment_Number }}{% endif %}
+                        <br>
+            <a href="https://www.google.com/maps/search/?api=1&query={{ v.Street_Number|urlencode }}+{{ v.Street_Name|urlencode }}{% if v.Apartment_Number %}+Apt+{{ v.Apartment_Number|urlencode }}{% endif %}+{{ v.Zip_Code|urlencode }}" target="_blank">
+                View on Map
+            </a>
+            </td>
+            <td>{{v.Zip_Code}} </td>
+            <td>{{v.DOB}} </td>
+            <td>{{v.DOR}} </td>
+
+            <td>{{v.Party}}</td>
+            <td>{{v.Precinct_Number}}</td>
+            <td>{{v.Voter_Score}}</td>
+
+
+            <td>{{v.v20state}} </td>
+            <td>{{v.v21town}} </td>
+            <td>{{v.v21primary}} </td>
+            <td>{{v.v22general}} </td>
+            <td>{{v.v23town}} </td>
+        </tr>
+
+    </table>
+</div>
+
+{% endblock %}

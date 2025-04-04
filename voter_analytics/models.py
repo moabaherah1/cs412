@@ -1,3 +1,6 @@
+# File: models.py
+# Author: Mohammed Abaherah (abaherah@bu.edu) 3 April 2025
+# Description: Contains models which model the data attributes of individual Facebook users. 
 from django.db import models
 
 # Create your models here.
