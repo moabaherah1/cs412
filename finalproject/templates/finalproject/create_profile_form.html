@@ -1,0 +1,28 @@
+<!-- # File: create_profile_form.html
+# Author: Mohammed Abaherah (abaherah@bu.edu) 15 April 2025
+# Description: Create page for user registration and profile creation -->
+
+{% extends 'finalproject/base.html' %}
+
+{% block content %}
+<h1>Create a New Profile</h1>
+
+<!-- display the HTML form -->
+<form method="POST">
+    {% csrf_token %}
+
+    <!-- User Creation Form (username, password, password confirmation) -->
+    <h2>Register</h2>
+    <table>
+        {{ user_creation_form.as_table }}
+    </table>
+
+    <!-- Profile Creation Form (first name, last name, image, etc.) -->
+    <h2>Create Profile</h2>
+    <table>
+        {{ form.as_table }}
+    </table>
+
+    <input type="submit" name="submit" value="Submit">
+</form>
+{% endblock %}

@@ -1,0 +1,29 @@
+<!-- # File: base.html
+# Author: Mohammed Abaherah (abaherah@bu.edu) 14 April 2025
+# Description: our base page  -->
+
+{% load static %}
+
+<html>
+    <head>
+        <title>LoveDist</title>
+        <link href="https://fonts.googleapis.com/css?family=Lovers+Quarrel" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'styles-finalproject.css' %}">
+    </head>
+
+    <body>
+        
+            <h1>LoveDist</h1>
+            <nav>
+                <ul>
+                    {% if user.is_authenticated %}
+                <li><a href="{% url 'show_userprofile' pk=user.profile.pk %}">My Profile</a></li>
+                    {% endif %}
+                <li><a href="{% url 'create_userprofile' %}">Create Profile</a></li>
+                </ul>
+            </nav>
+
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>
