@@ -34,7 +34,10 @@ nav {
     margin-bottom: 30px;
     border-bottom: 2px dashed #ff99cc;
 }
-
+.logout-form {
+    all: unset; /* wipes inherited form styling */
+    display: inline;
+}
 nav ul {
     list-style: none;
     display: flex;
@@ -55,6 +58,24 @@ nav a:hover {
     background-color: #cc1c8e;
     color: white;
 }
+
+.nav-link-button {
+    background: none;
+    border: none;
+    color: #cc1c8e;
+    font-size: 22px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+.nav-link-button:hover {
+    background-color: #cc1c8e;
+    color: white;
+}
+
 
 /* Profile Display */
 .profile-container {
@@ -97,7 +118,7 @@ nav a:hover {
     color: #663366;
 }
 
-/* Form Styling */
+
 form {
     max-width: 520px;
     margin: 40px auto;
@@ -152,7 +173,7 @@ form input[type="submit"]:hover {
     background-color: #cc1c8e;
 }
 
-/* Optional Heart Footer */
+
 footer {
     text-align: center;
     font-size: 18px;
@@ -164,4 +185,159 @@ footer::after {
     content: " 💕 Made with Love 💕 ";
     display: block;
     margin-top: 10px;
+}
+
+
+/* All Profiles Grid Layout */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto 60px;
+}
+
+/* Individual Profile Card */
+.profile-card {
+    background-color: #fff6fb;
+    border: 2px dashed #ffb3d9;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(204, 28, 142, 0.1);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    animation: fadeInUp 0.6s ease both;
+}
+
+.profile-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(204, 28, 142, 0.2);
+}
+
+/* Profile Image */
+.profile-card img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #ff66b2;
+    box-shadow: 0 0 12px rgba(255, 102, 178, 0.3);
+    margin-bottom: 12px;
+}
+
+/* Profile Name */
+.profile-card h2 {
+    font-size: 24px;
+    color: #cc1c8e;
+    margin-bottom: 8px;
+}
+
+/* Email or Nickname */
+.profile-card h3 {
+    font-size: 18px;
+    color: #663366;
+    margin-bottom: 10px;
+}
+
+
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.relationship-badge {
+    background-color: #ffe0f0;
+    color: #cc1c8e;
+    font-size: 16px;
+    padding: 6px 12px;
+    border-radius: 12px;
+    margin-top: 8px;
+    display: inline-block;
+    box-shadow: 0 2px 6px rgba(255, 102, 178, 0.2);
+}
+
+
+/* Send Invitation Button */
+.invite-button {
+    background-color: #ff66b2;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 12px rgba(204, 28, 142, 0.2);
+}
+
+.invite-button:hover {
+    background-color: #cc1c8e;
+    transform: translateY(-2px);
+}
+
+/* Invitations Section */
+.invitations-section {
+    margin-top: 40px;
+    padding: 24px;
+    background: #fff0f6;
+    border: 2px dashed #ffcce5;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px rgba(204, 28, 142, 0.1);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.invitations-section h2 {
+    color: #cc1c8e;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+/* Each individual invite block */
+.invitation {
+    background-color: #fff6fb;
+    border: 2px dotted #ffb3d9;
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+/* Accept / Reject Buttons */
+.accept-btn, .reject-btn {
+    padding: 8px 14px;
+    border-radius: 8px;
+    margin: 10px 5px 0;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.accept-btn {
+    background-color: #66cc99;
+    color: white;
+}
+
+.accept-btn:hover {
+    background-color: #55aa88;
+}
+
+.reject-btn {
+    background-color: #ff6666;
+    color: white;
+}
+
+.reject-btn:hover {
+    background-color: #cc3333;
 }

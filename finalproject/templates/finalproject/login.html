@@ -1,0 +1,27 @@
+<!-- # File: login.html
+# Author: Mohammed Abaherah (abaherah@bu.edu) 17 April 2025
+# Description: Displays login -->
+
+<!-- templates/finalproject/templates/login.html -->
+{% extends 'finalproject/base.html' %}
+
+{% block content %}
+
+<h1>Login</h1>
+<form method="post" class = "forms" action="{% url 'login' %}" >
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" value="Login">
+
+    {% if request.GET.next %}
+    <input type="hidden" name="next" value="{{request.GET.next}}">
+    {% else %}
+    <input type="hidden" name="next" value="{% url 'show_all_profiles' %}">
+    {% endif %}
+</form>
+
+
+<hr>
+Haven't started your adventure? <a href="{% url 'create_userprofile' %}">Register here</a>.
+{% endblock %}
+

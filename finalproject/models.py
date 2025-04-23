@@ -5,6 +5,7 @@
 from datetime import timezone
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
 from django.utils import timezone
 
 class UserProfile(models.Model):
@@ -18,30 +19,32 @@ class UserProfile(models.Model):
     address =  models.TextField(blank=True)
     email =  models.TextField(blank=True)
     dob = models.DateField()
-    image_url = models.URLField() #Want to change this so it can be a ImageField(upload to "folder" so I can have all images for the final project in one file and also so the user can upload
-    # their profile instead of having to use a url)
+    image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
 
-    is_in_couple = models.BooleanField(default=False)
     
     def __str__(self):
         '''Return a spring representation of user'''
-        return f'{self.user} & {self.nick_name}'
+        return f'{self.nick_name}'
+
+    def get_absolute_url(self):
+        '''Returns the reverse URL of the profile so we can return the user to the correct URL after submitting'''
+        return reverse('show_userprofile', kwargs={"pk": self.pk})
 
 
-    def add_partner(self, other):
-        ''' This method takes a parameter other, which refers to another UserProfile instance, 
-        and the effect of the method should be add a Couple relationship for the two UserProfiles: self and other.'''
-        if (self == other):
-            return
+    # def add_partner(self, other):
+    #     ''' This method takes a parameter other, which refers to another UserProfile instance, 
+    #     and the effect of the method should be add a Couple relationship for the two UserProfiles: self and other.'''
+    #     if (self == other):
+    #         return
         
-        already_coupled = Couple.objects.filter(models.Q(user1=self, user2 = other) | models.Q(user1 = other, user2 = self)).exists()
+    #     already_coupled = Couple.objects.filter(models.Q(user1=self, user2 = other) | models.Q(user1 = other, user2 = self)).exists()
 
-        if not already_coupled :
-            Couple.objects.create(user1 = self, user2 = other, creation_date = timezone.now().date())
-            self.is_in_couple = True
-            other.is_in_couple = True
-            self.save()
-            other.save()
+    #     if not already_coupled :
+    #         Couple.objects.create(user1 = self, user2 = other, creation_date = timezone.now().date())
+    #         self.is_in_couple = True
+    #         other.is_in_couple = True
+    #         self.save()
+    #         other.save()
 
     def get_partner(self):
         """Return the partner of the current user"""
@@ -75,7 +78,7 @@ class Invitation(models.Model):
     from_user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name= "from_user")
     to_user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name= "to_user")
     message = models.TextField(blank=True)
-    sent_at = models.DateTimeField(auto_now_add=True)
+    sent_at = models.DateTimeField(default=timezone.now)
     accepted = models.BooleanField(default=False)
     responded = models.BooleanField(default=False)
 

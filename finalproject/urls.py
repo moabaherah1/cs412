@@ -3,14 +3,18 @@
 # Description: Has the paths to all the correct views
 
 from django.urls import path
-from .views import  ShowProfilePageView, CreateProfileView
+from .views import  ShowAllProfilesView, ShowProfilePageView, CreateProfileView, SendInvitationView, RespondToInvitationView
 from django.contrib.auth import views as auth_views
 
 '''our url patterns so we can link to the page we want to show'''
 urlpatterns = [
     
-    path('', ShowProfilePageView.as_view(), name="show_all_profiles"),
+    path('', ShowAllProfilesView.as_view(), name="show_all_profiles"),
     path('profile/<int:pk>/', ShowProfilePageView.as_view(), name='show_userprofile'),
     path('create_userprofile/', CreateProfileView.as_view(), name='create_userprofile'), 
-
+    path('login/', auth_views.LoginView.as_view(template_name='finalproject/login.html'), name = 'login'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='show_all_profiles'), name='logout'),
+    path('invite/send/<int:to_user_pk>/', SendInvitationView.as_view(), name='send_invite'),
+    path('invite/respond/<int:invite_id>/', RespondToInvitationView.as_view(), name='respond_invite'),
+ 
 ]
