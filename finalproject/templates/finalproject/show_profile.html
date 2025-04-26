@@ -1,55 +1,46 @@
+<!-- # File: show_profile.html
+# Author: Mohammed Abaherah (abaherah@bu.edu) 14 April 2025
+# Description: display page for a single profile -->
+
 {% extends 'finalproject/base.html' %}
 
 {% block content %}
+
 <main class="profile-container">
+
     <table class="profile-table">
         <tr>
             <td class="profile-image_solo">
                 {% if profile.image and profile.image.name %}
-                    <img src="{{ profile.image.url }}" alt="Profile image of {{ profile.first_name }}">
-                {% else %}
-                    <img src="{{ MEDIA_URL }}profile_images/default_profile.png" alt="Default profile image">
-                {% endif %}
+                <img src="{{ profile.image.url }}" alt="Profile image of {{ profile.first_name }}">
+            {% else %}
+                <img src="{{ MEDIA_URL }}profile_images/default_profile.png" alt="Default profile image">
+            {% endif %}
             </td>
 
             <td class="profile-info">
-                <h1 class="profile-title">{{ profile.first_name }} {{ profile.nick_name }}</h1>
+                <h1 class="profile-title">{{ profile.first_name }} {{ profile.nick_name}}</h1>
                 <h2 class="profile-address">lives at {{ profile.address }}</h2>
                 <h2 class="profile-dob">born on {{ profile.dob }}</h2>
-                <h2 class="profile-email">{{ profile.email }}</h2>
+                <h2 class="profile-email"> {{ profile.email }}</h2>
 
-                {% if partner %}
-                    <h2 class="profile-partner">💞 In a relationship with {{ partner.nick_name }}</h2>
-                {% endif %}
-
-                {% if request.user.is_authenticated and request.user != profile.user and not partner %}
-                    <form method="post" action="{% url 'send_invite' profile.pk %}">
-                        {% csrf_token %}
-                        <button type="submit" class="invite-button">💌 Send Invitation</button>
-                    </form>
-                {% endif %}
             </td>
         </tr>
-    </table>
 
-    {% if request.user == profile.user %}
-        <div class="invitations-section">
-            <h2>💌 Invitations</h2>
-            {% if pending_invites %}
-                {% for invite in pending_invites %}
-                    <div class="invitation">
-                        <p>{{ invite.from_user.nick_name }} wants to be your partner!</p>
-                        <form method="post" action="{% url 'respond_invite' invite.id %}">
-                            {% csrf_token %}
-                            <button name="response" value="accept" class="accept-btn">Accept</button>
-                            <button name="response" value="reject" class="reject-btn">Reject</button>
-                        </form>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <p>No pending invitations.</p>
-            {% endif %}
-        </div>
+        {% if partner %}
+        <h2 class="profile-partner">In a relationship with {{ partner }}</h2>
+    {% else %}
+        <td class="profile-info">
+            <p>Currently single.</p>
+            <p>You can send an invitation to someone by hovering over their profile!</p>
+        </td>
     {% endif %}
+
 </main>
+
+
 {% endblock %}
+
+
+
+

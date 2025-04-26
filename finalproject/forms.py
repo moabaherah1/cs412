@@ -3,7 +3,7 @@
 # Description: Create "finalproject/forms.py" to define the CreateProfileForm
 
 from django import forms
-from .models import UserProfile, Invitation
+from .models import UserProfile
 
 class CreateProfileForm(forms.ModelForm):
     '''A form to add a UserProfile to the database'''
@@ -16,12 +16,5 @@ class CreateProfileForm(forms.ModelForm):
         model = UserProfile
         fields = ['first_name', 'nick_name', 'address', 'email', 'dob', 'image']
 
-class InvitationForm(forms.ModelForm):
-    '''A form to invite someone to a relationship'''
-
-    class Meta:
-        '''associate this form with the Invitation model from our database'''
-        model = Invitation
-        fields = ['from_user', 'to_user', 'message', 'sent_at']
 
 

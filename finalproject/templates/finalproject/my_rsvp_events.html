@@ -1,0 +1,23 @@
+<!-- # File: my_rsvp_events.html
+# Author: Mohammed Abaherah (abaherah@bu.edu) 26 April 2025
+# Description: This page is for users to see the events they rsvped to -->
+
+
+{% extends "finalproject/base.html" %}
+{% block content %}
+
+<h1>My RSVP'd Events </h1>
+
+<ul>
+    {% for rsvp in rsvp_events %}
+        <li>
+            <strong>{{ rsvp.event_title }}</strong> (RSVP'd on {{ rsvp.rsvp_date|date:"M d, Y" }})
+        </li>
+    {% empty %}
+        <li>You haven't RSVP'd to any events yet.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'show_events' %}">Back to Events Calendar</a>
+
+{% endblock %}

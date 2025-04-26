@@ -1,0 +1,29 @@
+<!-- # File: Show_invitations.html
+# Author: Mohammed Abaherah (abaherah@bu.edu) 24 April 2025
+# Description: shows all invitations -->
+
+{% extends 'finalproject/base.html' %}
+
+{% block content %}
+    <h2>Your Invitations</h2>
+
+    {% if invitations %}
+        <ul>
+            {% for invitation in invitations %}
+                <li>
+                    <p><strong>{{ invitation.from_user.nick_name }}</strong> has invited you to become a couple.</p>
+                    <p>Message: {{ invitation.message }}</p>
+                    
+                    <form method="post" action="{% url 'respond_invite' invite_id=invitation.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" name="response" value="accept">Accept</button>
+                        <button type="submit" name="response" value="reject">Reject</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have no new invitations.</p>
+    {% endif %}
+{% endblock %}
+

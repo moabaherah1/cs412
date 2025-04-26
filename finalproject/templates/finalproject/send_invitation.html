@@ -1,0 +1,18 @@
+<!-- # File: send_invitation.html
+# Author: Mohammed Abaherah (abaherah@bu.edu) 24 April 2025
+# Description: send invitation page -->
+
+
+{% extends 'finalproject/base.html' %}
+
+{% block content %}
+<h1>Send an Invitation</h1>
+<h2>Invite {{ to_user.first_name }} {{ to_user.nick_name }} to become your partner</h2>
+
+<form method="POST" action="{% url 'send_invitation' to_user_pk=to_user.pk %}">
+    {% csrf_token %}
+    <p>Message:</p>
+    <textarea name="message" rows="4" cols="50" placeholder="Write your invitation message..."></textarea><br>
+    <button type="submit">Send Invitation</button>
+</form>
+{% endblock %}

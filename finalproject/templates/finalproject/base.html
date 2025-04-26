@@ -7,7 +7,7 @@
 <html>
     <head>
         <title>LoveDist</title>
-        <link href="https://fonts.googleapis.com/css?family=Lovers+Quarrel" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{% static 'styles-finalproject.css' %}">
     </head>
 
@@ -17,12 +17,15 @@
                 <ul>
                     <li><a href="{% url 'show_all_profiles' %}">Show All</a></li>
                     {% if user.is_authenticated %}
-                    {% if user.profile %}
-                        <li><a href="{% url 'show_userprofile' pk=user.profile.pk %}">My Profile</a></li>
-                    {% else %}
-                        <li><a href="{% url 'create_userprofile' %}">Create Profile</a></li>
+                    {% if UserProfile %}
+                        <li><a href="{% url 'show_userprofile' pk=UserProfile.pk %}">My Profile</a></li>
+                        {% if not partner %}
+                            <li><a href="{%url 'show_invitations' %}"> View Invites</a></li>
+                        {% else %}
+                        <li><a href="{% url 'my_rsvp_events' %}">My RSVPs</a></li>
+                        <li><a href="{% url 'show_events' %}">Event Calendar</a></li>
+                            {% endif %}
                     {% endif %}
-                    
                     <li> </li>
                     <form method="post" action="{% url 'logout' %}" class="logout-form">
                         {% csrf_token %}

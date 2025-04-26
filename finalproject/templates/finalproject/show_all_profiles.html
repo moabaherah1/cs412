@@ -5,30 +5,33 @@
 {% extends 'finalproject/base.html' %}
 
 {% block content %}
-<h1>All beautiful people</h1>
+<h1>All Beautiful People</h1>
 
 <main class="grid-container">
+    
     {% for profile in profiles %}
-    <div class="profile-card">
-        <a href="{% url 'show_userprofile' profile.pk %}">
-            {% if profile.image %}
-            <img src="{{ profile.image.url }}" alt="Profile image of {{ profile.nick_name }}">
-            {% endif %}
-        </a>
-        <h2>
+        <div class="profile-card">
+            <a href="{% url 'show_userprofile' profile.pk %}">
+                
+                <img src="{{ profile.image.url }}" alt="Profile image of {{ profile.nick_name }}">
+            </a>
+            <h2>
+                <a href="{% url 'show_userprofile' profile.pk %}">{{ profile.first_name }} {{ profile.nick_name }}</a>
+            </h2>
+            <h3>{{ profile.email }}</h3>
 
-            <a href="{% url 'show_userprofile' profile.pk %}">{{ profile.first_name }} {{ profile.nick_name }}</a>
-        </h2>
-        <h3>{{ profile.email }}</h3>
-        
-        {% if profile.get_partner%}
-        <p class="relationship-badge">💞 In a relationship</p>
+            {% if profile.get_partner %}
+            <p class="relationship-badge">💞 In a relationship</p>
+        {% elif profile.pk in sent_invites %}
+            <p class="relationship-badge">📨 Invite already sent!</p>
+        {% else %}
+            <form method="POST" action="{% url 'send_invitation' to_user_pk=profile.pk %}" class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="invite-button">Send Invitation</button>
+            </form>
         {% endif %}
-
-        
-    </div>
+            </div>
     {% endfor %}
 </main>
-
-
 {% endblock %}
+
