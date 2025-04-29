@@ -1,0 +1,41 @@
+<!-- # File: show_couple_posts.html
+# Author: Mohammed Abaherah (abaherah@bu.edu) 28 April 2025
+# Description: display page for all posts by the couple!!! -->
+
+
+{% extends 'finalproject/base.html' %}
+
+{% block content %}
+<h1>Our Memories Together</h1>
+
+
+<div class="create-memory-button">
+    <a href="{% url 'create_couple_post' %}"> Create New Memory</a>
+</div>
+
+
+{% if posts %}
+    <div class="grid-container">
+        {% for post in posts %}
+            <div class="profile-card">
+                <h3>{{ post.message }}</h3>
+                <p><em>{{ post.time_stamp|date:"F j, Y" }}</em></p>
+
+                {% for image in post.couplepostimage_set.all %}
+                    <img src="{{ image.image.image.url }}" alt="Memory Image" style="max-width: 100%; margin-top: 10px;">
+                    <p>{{ image.image.caption }}</p>
+                {% endfor %}
+
+                <div style="margin-top: 10px;">
+                    <a href="{% url 'update_couple_post' post.pk %}" class="memory-action"> Edit</a> |
+                    <a href="{% url 'delete_couple_post' post.pk %}" class="memory-action"> Delete</a>
+                </div>
+
+                
+            </div>
+        {% endfor %}
+    </div>
+
+{% endif %}
+
+{% endblock %}

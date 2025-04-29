@@ -1,0 +1,27 @@
+<!-- # File: update_couple_post_form.html
+# Author: Mohammed Abaherah (abaherah@bu.edu) 28 April 2025
+# Description: update page for status form -->
+
+{% extends 'finalproject/base.html' %}
+
+{% block content %}
+<div class="center">
+<h1>Update Memory</h1>
+
+<h3>Make a change to your memory caption!</h3>
+
+<form method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+
+    <input type="submit" value="Update">
+</form>
+
+<form action="{% url 'show_couple_posts' couplepost.couple.pk %}" method="GET">
+    {% csrf_token %}
+    <input type="submit" value="Cancel">
+</form>
+</div>
+{% endblock %}

@@ -1,0 +1,185 @@
+<!-- # File: map_view.html
+# Author: Mohammed Abaherah (abaherah@bu.edu) 28 April 2025
+# Description: display page for interactive map -->
+
+{% extends 'finalproject/base.html' %}
+{% load static %}
+{% block content %}
+
+<h1> Love, Globally</h1>
+
+<!-- Automatically fills in Adress with the address given by the user_profile -->
+<div style="text-align: center; margin-bottom: 20px;">
+    <input type="text" id="yourLocation" 
+    placeholder="Enter Your Location" 
+    value="{{ user_profile.address|default:'' }}" 
+    style="padding: 10px; width: 300px; margin-right: 10px;">
+
+<input type="text" id="partnerLocation" 
+    placeholder="Enter Partner's Location" 
+    value="{% if partner_profile %}{{ partner_profile.address|default:'' }}{% endif %}" 
+    style="padding: 10px; width: 300px;">
+    
+    <button id="findButton" style="padding: 10px 20px; margin-left: 10px;">Find Locations</button>
+</div>
+
+
+<div id="map" style="height: 600px;"></div>
+
+<!-- Load Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    
+        // Initialize the map and set it to center globally at first
+        var map = L.map('map').setView([20, 0], 2);
+    
+        // Add the OpenStreetMap tiles (these are free map tiles from OSM)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+    
+        // These variables will hold our two markers and the line connecting them
+        var yourMarker = null;
+        var partnerMarker = null;
+        var polyline = null;
+    
+        // Function to Calculate the Distance between two points
+        // Using the real Earth radius formula (Haversine Formula) thank you Internet 
+        function calculateDistance(lat1, lng1, lat2, lng2) {
+            function toRad(x) {
+                return x * Math.PI / 180; 
+            }
+            const R = 6371; 
+            const dLat = toRad(lat2 - lat1);
+            const dLng = toRad(lng2 - lng1);
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                      Math.sin(dLng/2) * Math.sin(dLng/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            const distance = R * c;
+            return distance;
+        }
+    
+        // --- When the "Find Locations" button is clicked ---
+        document.getElementById('findButton').addEventListener('click', function() {
+            // Grab the address text that the user typed in
+            const yourAddress = document.getElementById('yourLocation').value;
+            const partnerAddress = document.getElementById('partnerLocation').value;
+    
+            // If either one is blank, alert the user
+            if (!yourAddress || !partnerAddress) {
+                alert('Please enter both locations!');
+                return;
+            }
+    
+            // Clean the old markers if they exist 
+            if (yourMarker) map.removeLayer(yourMarker);
+            if (partnerMarker) map.removeLayer(partnerMarker);
+            if (polyline) map.removeLayer(polyline);
+    
+            // Finding coordinates from address requires Promise.all to send TWO fetch requests at once
+            // One for the User and one for their Partner
+            Promise.all([
+                fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(yourAddress)}&format=json`),
+                fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(partnerAddress)}&format=json`)
+            ])
+            .then(responses => Promise.all(responses.map(res => res.json()))) // when both requests are done, parse their JSON
+            .then(([yourData, partnerData]) => {  // once data comes back...
+    
+                // If no location was found for one or both, alert the user
+                if (yourData.length === 0 || partnerData.length === 0) {
+                    alert('Unable to find one or both locations. Try being more specific.');
+                    return;
+                }
+    
+                // Grab the latitude and longitude from the API data
+                const yourLat = parseFloat(yourData[0].lat);
+                const yourLng = parseFloat(yourData[0].lon);
+                const partnerLat = parseFloat(partnerData[0].lat);
+                const partnerLng = parseFloat(partnerData[0].lon);
+    
+                // --- Place the markers on the map ---
+                yourMarker = L.marker([yourLat, yourLng]).addTo(map)
+                    .bindPopup('You').openPopup();
+    
+                partnerMarker = L.marker([partnerLat, partnerLng]).addTo(map)
+                    .bindPopup('Partner').openPopup();
+    
+                // Draw the line between you and your partner
+                var latlngs = [
+                    [yourLat, yourLng],
+                    [partnerLat, partnerLng]
+                ];
+                polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+                map.fitBounds(polyline.getBounds());
+    
+                //Calculate the Distance between you two
+                const distanceKm = calculateDistance(yourLat, yourLng, partnerLat, partnerLng);
+                let showingMiles = false;  
+    
+                // Clean up old distance display if exists
+                const existingDistanceDiv = document.getElementById('distance-info');
+                if (existingDistanceDiv) {
+                    existingDistanceDiv.remove();
+                }
+                const distanceDiv = document.createElement('div');
+                distanceDiv.id = 'distance-info';
+                distanceDiv.style.textAlign = 'center';
+                distanceDiv.style.marginTop = '20px';
+    
+                function updateDistanceDisplay() {
+                    if (showingMiles) {
+                        const distanceMiles = (distanceKm * 0.621371).toFixed(2);
+                        distanceDiv.innerHTML = `<h2>You are ${distanceMiles} miles apart ❤️<br><button id="toggleButton">Switch to km</button></h2>`;
+                    } else {
+                        distanceDiv.innerHTML = `<h2>You are ${distanceKm.toFixed(2)} km apart ❤️<br><button id="toggleButton">Switch to miles</button></h2>`;
+                    }
+                }
+    
+                updateDistanceDisplay(); // show the initial distance
+                document.getElementById('findButton').after(distanceDiv); 
+    
+                // Handle Switching m/km
+                distanceDiv.addEventListener('click', function(event) {
+                    if (event.target.id === 'toggleButton') {
+                        showingMiles = !showingMiles;
+                        updateDistanceDisplay();
+                    }
+                });
+    
+                //Save the found locations with a POST
+                fetch("{% url 'save_locations' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        your_latitude: yourLat,
+                        your_longitude: yourLng,
+                        partner_latitude: partnerLat,
+                        partner_longitude: partnerLng
+                    })
+                }).then(response => {
+                    if (response.ok) {
+                        console.log('Locations saved successfully!');
+                    } else {
+                        console.error('Failed to save locations.');
+                    }
+                });
+    
+            })
+            .catch(error => {
+                console.error('Something went wrong while finding locations:', error);
+                alert('Something went wrong. Please try again.');
+            });
+        });
+    
+    });
+    </script>
+    
+
+{% endblock %}

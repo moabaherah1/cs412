@@ -1,0 +1,22 @@
+<!-- # File: create_couple_post_form.html
+# Author: Mohammed Abaherah (abaherah@bu.edu) 28 April 2025
+# Description: Couples posting cute photos and captiosn!!!!! -->
+
+{% extends 'finalproject/base.html' %}
+{% block content %}
+
+<h1>Create a Cute Post</h1>
+
+<form action="{% url 'create_couple_post' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+
+    <h3>Upload Cute Pictures!</h3>
+    <input type="file" name="files" multiple />
+
+    <input type="submit" value="Post!">
+</form>
+
+{% endblock %}

@@ -2,20 +2,27 @@
 # Author: Mohammed Abaherah (abaherah@bu.edu) 14 April 2025
 # Description: Defines our views to display what we want
 
+from django.db.models import Q
 from django.utils import timezone
+from datetime import date
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
 from django.urls import reverse
-from django.views.generic import  DetailView, CreateView, View, ListView, FormView
-from .models import UserProfile, Invitation, Couple, EventRSVP
-from .forms import CreateProfileForm
+from django.views.generic import  DetailView, CreateView, View, ListView, TemplateView,DeleteView, UpdateView
+from .models import UserProfile, Invitation, Couple, EventRSVP, CouplePost, CoupleImage, CouplePostImage
+from .forms import CreateProfileForm, CreateCouplePostForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from finalproject import models
+
 import requests
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+import json
 
 
 class UserProfileMixIn:
@@ -25,14 +32,28 @@ class UserProfileMixIn:
         context = super().get_context_data(**kwargs)
         user_profile = None
         partner = None
+        couple = None
+        couple_pk = None
+
         if self.request.user.is_authenticated:
             try:
                 user_profile = UserProfile.objects.get(user=self.request.user)
                 partner = user_profile.get_partner()
+
+                if partner:
+                    couple = Couple.objects.filter(
+                        (Q(user1=user_profile) & Q(user2=partner)) |
+                        (Q(user1=partner) & Q(user2=user_profile))
+                    ).first()
+
+                    if couple:
+                        couple_pk = couple.pk
+
             except UserProfile.DoesNotExist:
                 pass
         context["UserProfile"] = user_profile
         context["partner"] = partner
+        context["couple_pk"] = couple_pk
         return context
 
 class ShowAllProfilesView(UserProfileMixIn, ListView):
@@ -169,9 +190,11 @@ class RespondToInvitationView(View):
 
 
 class RSVPEventView(LoginRequiredMixin, View):
-    
+    """View to actually post and rsvp the event the user clicks on rsvp for"""
     @method_decorator(require_POST)
+    # ^Ensures that the used method is POST
     def post(self, request, *args, **kwargs):
+        '''posts the rsvp and redirects user to show events'''
         event_id = request.POST.get('event_id')
         event_title = request.POST.get('event_title')
 
@@ -209,7 +232,7 @@ def show_events(request):
     params = {
         "limit": 30,
         "sort": "start",
-        "active.gte": "2025-04-25",
+        "active.gte": str(date.today()),
     }
     if category:
         params["category"] = category
@@ -229,7 +252,6 @@ def show_events(request):
             "id": event["id"],
             "title": event["title"],
             "start": event["start"],
-            "end": event.get("end", event["start"]),
             "description": event.get("description", ""),
         })
 
@@ -247,3 +269,123 @@ class MyRSVPEventsView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         """Return only the RSVP events of the current logged-in user."""
         return EventRSVP.objects.filter(user=self.request.user)
+    
+
+
+class ShowMapView(LoginRequiredMixin, TemplateView):
+    '''Users can see the Map which displays both their locations and also the distance between them :(!)'''
+    template_name = "finalproject/map_view.html"
+
+    def get_context_data(self, **kwargs):
+        """Overrides get_context_data to add the logged-in user's profile
+    and their partner's profile to the context for the template."""
+        context = super().get_context_data(**kwargs)
+
+        user_profile = self.request.user.finalproject_profile
+        partner_profile = user_profile.get_partner()
+
+        context['user_profile'] = user_profile
+        context['partner_profile'] = partner_profile
+
+        return context
+    
+@csrf_exempt
+@login_required
+def save_locations(request):
+    '''Save your and your partner's lat/lng after typing addresses'''
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user_profile = request.user.finalproject_profile
+
+            # Save your own location
+            user_profile.latitude = data.get('your_latitude')
+            user_profile.longitude = data.get('your_longitude')
+
+            # Save partner's location if you have a partner
+            partner = user_profile.get_partner()
+            if partner:
+                partner.latitude = data.get('partner_latitude')
+                partner.longitude = data.get('partner_longitude')
+                partner.save()
+
+            user_profile.save()
+
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+    return JsonResponse({'status': 'fail'}, status=400)
+
+class CreateCouplePostView(CreateView):
+    '''View to create a new Couple Post.'''
+    model = CouplePost
+    form_class = CreateCouplePostForm
+    template_name = "finalproject/create_couple_post_form.html"
+
+    def form_valid(self, form):
+        '''After the form is valid, handle file uploads'''
+        post = form.save(commit=False)
+        user_profile = self.request.user.finalproject_profile
+        
+        partner_profile = user_profile.get_partner()
+
+        if not partner_profile:
+            return redirect('show_all_profiles')  
+
+        couple = Couple.objects.filter(
+            Q(user1=user_profile, user2=partner_profile) |
+            Q(user1=partner_profile, user2=user_profile)
+        ).first()
+
+
+        if not couple:
+            return redirect('show_all_profiles')  
+
+        post.couple = couple
+        post.save()
+
+        files = self.request.FILES.getlist('files')
+        for f in files:
+            image = CoupleImage(couple=couple, image=f)
+            image.save()
+            CouplePostImage(image=image, post=post).save()
+
+        return redirect('show_couple_posts', pk=couple.pk)
+    
+class ShowCouplePostsView(LoginRequiredMixin, DetailView):
+    '''View to show all memories for a couple'''
+    model = Couple
+    template_name = "finalproject/show_couple_posts.html"
+    context_object_name = "couple"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        couple = self.get_object()
+        posts = CouplePost.objects.filter(couple=couple).order_by('-time_stamp')
+        context['posts'] = posts
+        return context
+    
+
+class DeleteCouplePostView(LoginRequiredMixin, DeleteView):
+    '''a class-based view to delete a status message'''
+    model = CouplePost
+    template_name = "finalproject/delete_couple_post_form.html"
+    context_object_name = "couplepost"
+
+    def get_success_url(self):
+        '''After deleting, return to the couple's memories page'''
+        return reverse('show_couple_posts', kwargs={'pk': self.object.couple.pk})
+
+
+class UpdateCouplePostView(LoginRequiredMixin, UpdateView):
+    '''a class-based view to update a status message'''
+    model = CouplePost
+    form_class = CreateCouplePostForm
+    template_name = "finalproject/update_couple_post_form.html"
+    context_object_name = "couplepost"
+
+    def get_success_url(self):
+        '''After updating, return to the couple's memories page'''
+        return reverse('show_couple_posts', kwargs={'pk': self.object.couple.pk})

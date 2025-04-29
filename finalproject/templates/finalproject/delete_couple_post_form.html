@@ -1,0 +1,25 @@
+<!-- # File: delete_couple_post_form.html
+# Author: Mohammed Abaherah (abaherah@bu.edu) 28 April 2025
+# Description: delete page for status form -->
+
+{% extends 'finalproject/base.html' %}
+
+{% block content %}
+
+<h1>Delete Memory</h1>
+
+<h3>Are you sure you want to delete this memory?</h3>
+
+{{ couplepost.message }}
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Delete">
+</form>
+
+<form action="{% url 'show_couple_posts' couplepost.couple.pk %}" method="GET">
+    {% csrf_token %}
+    <input type="submit" value="Cancel">
+</form>
+
+{% endblock %}

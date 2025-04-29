@@ -12,7 +12,11 @@
     </head>
 
     <body>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin: 30px 0;">
             <h1>LoveDist</h1>
+            <img src="{% static 'images/milk_and_mocha.gif' %}" alt="Milk and Mocha" style="height: 80px; border-radius: 12px;">
+        </div>
+        
             <nav>
                 <ul>
                     <li><a href="{% url 'show_all_profiles' %}">Show All</a></li>
@@ -22,8 +26,12 @@
                         {% if not partner %}
                             <li><a href="{%url 'show_invitations' %}"> View Invites</a></li>
                         {% else %}
+                        <li><a href="{% url 'map_view' %}">Our Map </a></li>
                         <li><a href="{% url 'my_rsvp_events' %}">My RSVPs</a></li>
                         <li><a href="{% url 'show_events' %}">Event Calendar</a></li>
+                        {% if couple_pk %}
+                            <li><a href="{% url 'show_couple_posts' couple_pk %}">📸 Our Memories</a></li>
+                        {% endif %}
                             {% endif %}
                     {% endif %}
                     <li> </li>

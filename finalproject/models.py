@@ -18,6 +18,8 @@ class UserProfile(models.Model):
     email = models.EmailField(unique=True, blank=True)
     dob = models.DateField(blank=True, null=True)
     image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.first_name} {self.nick_name}"
@@ -73,3 +75,36 @@ class EventRSVP(models.Model):
 
     def __str__(self):
         return f"{self.user.username} RSVP'd to {self.event_title}"
+    
+
+class CouplePost(models.Model):
+    '''Models a post made by a couple.'''
+    couple = models.ForeignKey(Couple, on_delete=models.CASCADE)
+    message = models.TextField(blank=True)
+    time_stamp = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'Post by {self.couple} at {self.time_stamp}'
+
+    def get_absolute_url(self):
+        return reverse('show_couple_posts', kwargs={"pk": self.couple.pk})
+
+
+class CoupleImage(models.Model):
+    '''Models an image belonging to a couple post.'''
+    couple = models.ForeignKey(Couple, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='couple_images/', blank=True)
+    caption = models.TextField(blank=True)
+    time_stamp = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.caption}'
+
+
+class CouplePostImage(models.Model):
+    '''Connects an image to a couple's post.'''
+    image = models.ForeignKey(CoupleImage, on_delete=models.CASCADE)
+    post = models.ForeignKey(CouplePost, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'Image {self.image} in Post {self.post}'

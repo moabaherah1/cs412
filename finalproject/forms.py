@@ -3,7 +3,7 @@
 # Description: Create "finalproject/forms.py" to define the CreateProfileForm
 
 from django import forms
-from .models import UserProfile
+from .models import UserProfile, CouplePost
 
 class CreateProfileForm(forms.ModelForm):
     '''A form to add a UserProfile to the database'''
@@ -15,6 +15,13 @@ class CreateProfileForm(forms.ModelForm):
         '''associate this form with the UserProfile model from our database.'''
         model = UserProfile
         fields = ['first_name', 'nick_name', 'address', 'email', 'dob', 'image']
+
+class CreateCouplePostForm(forms.ModelForm):
+    '''Form for creating a new Couple Post.'''
+    
+    class Meta:
+        model = CouplePost
+        fields = ['message']
 
 
 
