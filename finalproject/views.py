@@ -168,6 +168,9 @@ class ShowInvitationsView(UserProfileMixIn, ListView):
         """Filter invitations where the logged-in user is the recipient."""
         return Invitation.objects.filter(to_user__user=self.request.user)
 
+
+from datetime import datetime
+from django.utils.timezone import make_aware
 class RespondToInvitationView(View):
     """View to handle accepting or rejecting invitations."""
 
@@ -182,7 +185,7 @@ class RespondToInvitationView(View):
         response = request.POST.get('response')
 
         if response == 'accept':
-            Couple.objects.create(user1=invitation.from_user, user2=invitation.to_user, anniversary_date=timezone.localtime().date())
+            Couple.objects.create(user1=invitation.from_user, user2=invitation.to_user,anniversary_date=make_aware(datetime.now()).date())
             invitation.delete()
 
         return redirect('show_userprofile', pk=user_profile.pk)
