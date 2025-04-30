@@ -182,7 +182,7 @@ class RespondToInvitationView(View):
         response = request.POST.get('response')
 
         if response == 'accept':
-            Couple.objects.create(user1=invitation.from_user, user2=invitation.to_user, anniversary_date=timezone.now().date())
+            Couple.objects.create(user1=invitation.from_user, user2=invitation.to_user, anniversary_date=timezone.localtime().date())
             invitation.delete()
 
         return redirect('show_userprofile', pk=user_profile.pk)
