@@ -51,6 +51,10 @@ h1 {
     text-shadow: 1px 1px 2px #ffd6ec;
 }
 
+h3 {
+    text-align: center;
+}
+
 nav {
     background-color: #ffe6f0;
     padding: 12px 0;
@@ -420,25 +424,58 @@ footer::after {
     background-color: #cc1c8e;
     transform: scale(1.05);
 }
+.memory-post {
+    background-color: #fff6fb;
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(204, 28, 142, 0.1);
+    max-width: 700px;
+    text-align: center;
+}
 
-/* Memory Image Style */
 .memory-image {
-    max-width: 100%;
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    border-radius: 16px;
+    object-fit: cover;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    margin-top: 12px;
+}
+
+.memory-caption {
+    font-size: 16px;
+    color: #555;
     margin-top: 10px;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(204, 28, 142, 0.2);
+    font-style: italic;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.memory-date {
+    font-size: 14px;
+    color: #888;
+    margin-top: 15px;
+}
+
+.memory-actions {
+    margin-top: 15px;
 }
 
 .memory-action {
-    text-decoration: none;
+    font-size: 14px;
     color: #cc1c8e;
-    font-size: 18px;
-    padding: 4px 8px;
-    border-radius: 6px;
-    transition: all 0.3s ease;
+    text-decoration: underline;
+    margin: 0 8px;
 }
 
 .memory-action:hover {
-    background-color: #cc1c8e;
-    color: white;
+    color: #a6006f;
+}
+
+.memories-title {
+    text-align: center;
+    font-size: 48px;
+    margin-bottom: 30px;
 }

@@ -2,9 +2,11 @@
 # Author: Mohammed Abaherah (abaherah@bu.edu) 14 April 2025
 # Description: Defines our views to display what we want
 
+from collections import defaultdict
 from django.db.models import Q
+from datetime import datetime, timedelta, timezone
 from django.utils import timezone
-from datetime import date
+
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -16,14 +18,13 @@ from django.contrib.auth.forms import UserCreationForm
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from finalproject import models
-
-import requests
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 import json
-
+import requests
+from .forms import CreateCouplePostForm
+from .models import CouplePost, CoupleImage, CouplePostImage
 
 class UserProfileMixIn:
     """Mixin to make things easier """
@@ -222,43 +223,64 @@ class RSVPEventView(LoginRequiredMixin, View):
 
 
 
-def show_events(request):
-    '''Being able to display the events using the PredictHQ API for events in this function'''
-    api_key = "HBcULnUIMjqoac2uNHEVX330q3u6RKEwYqDHqwEd"
-    url = "https://api.predicthq.com/v1/events/"
 
-    category = request.GET.get('category', '')  # get category from search form
+
+def show_events(request):
+    """Displays events from the ticketmaster API"""
+    api_key = "BrQglFQbjVOfs0K5IxUYcJfs1Odh3GAp"
+    url = "https://app.ticketmaster.com/discovery/v2/events.json"
+
+    category = request.GET.get("category", "")
+    
+    now_utc = datetime.now(timezone.utc)
+    sixty_days_later = now_utc + timedelta(days=60)
 
     params = {
-        "limit": 30,
-        "sort": "start",
-        "active.gte": str(date.today()),
+        "apikey": api_key,
+        "countryCode": "US",
+        "startDateTime": now_utc.strftime('%Y-%m-%dT%H:%M:%SZ'),
+        "endDateTime": sixty_days_later.strftime('%Y-%m-%dT%H:%M:%SZ'),
+        "size": 200,
+        "sort": "date,asc",
     }
+
     if category:
-        params["category"] = category
+        params["classificationName"] = category
 
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Accept": "application/json",
-    }
+    response = requests.get(url, params=params)
+    data = response.json()
 
-    response = requests.get(url, headers=headers, params=params)
-    
-    raw_events = response.json().get("results", []) if response.status_code == 200 else []
-    
+    raw_events = data.get("_embedded", {}).get("events", [])
     calendar_events = []
+    event_counts = defaultdict(int)
+
     for event in raw_events:
-        calendar_events.append({
-            "id": event["id"],
-            "title": event["title"],
-            "start": event["start"],
-            "description": event.get("description", ""),
-        })
+        try:
+            start_time = event["dates"]["start"].get("dateTime") or event["dates"]["start"]["localDate"]
+            event_datetime = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
+
+            # Only include events in the future
+            if event_datetime > now_utc:
+                event_date_str = event_datetime.date().isoformat()
+
+                if event_counts[event_date_str] < 10:
+                    calendar_events.append({
+                        "id": event["id"],
+                        "title": event["name"],
+                        "start": start_time,
+                        "description": event.get("info", ""),
+                    })
+                    event_counts[event_date_str] += 1
+
+        except Exception as e:
+            continue  
 
     return render(request, "finalproject/show_events.html", {
         "calendar_events": calendar_events,
         "selected_category": category,
     })
+
+
 
 class MyRSVPEventsView(LoginRequiredMixin, ListView):
     '''Users can see all the events they RSVPed to'''
@@ -386,6 +408,26 @@ class UpdateCouplePostView(LoginRequiredMixin, UpdateView):
     template_name = "finalproject/update_couple_post_form.html"
     context_object_name = "couplepost"
 
+    def form_valid(self, form):
+        '''Ensures the form is valid and proceeds'''
+        response = super().form_valid(form)
+
+        new_image_file = self.request.FILES.get('new_image')
+        if new_image_file:
+            CouplePostImage.objects.filter(post=self.object).delete()
+
+            new_image = CoupleImage.objects.create(
+                couple=self.object.couple,
+                image=new_image_file,
+                caption=form.cleaned_data.get('message', '')  
+            )
+
+            CouplePostImage.objects.create(
+                post=self.object,
+                image=new_image
+            )
+
+        return response
+
     def get_success_url(self):
-        '''After updating, return to the couple's memories page'''
         return reverse('show_couple_posts', kwargs={'pk': self.object.couple.pk})

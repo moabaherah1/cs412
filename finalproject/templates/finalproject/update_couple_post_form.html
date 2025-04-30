@@ -8,13 +8,16 @@
 <div class="center">
 <h1>Update Memory</h1>
 
-<h3>Make a change to your memory caption!</h3>
+<h3>Make a change to your memory caption or image!</h3>
 
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <table>
         {{ form.as_table }}
     </table>
+
+    <label for="new_image">Upload New Image:</label>
+    <input type="file" name="new_image" id="new_image"><br><br>
 
     <input type="submit" value="Update">
 </form>
@@ -25,3 +28,4 @@
 </form>
 </div>
 {% endblock %}
+

@@ -6,6 +6,7 @@ from django.urls import path
 from .views import  ShowAllProfilesView, ShowProfilePageView, CreateProfileView, ShowMapView, ShowCouplePostsView, DeleteCouplePostView, UpdateCouplePostView
 from .views import SendInvitationView, RespondToInvitationView, ShowInvitationsView, show_events, RSVPEventView, MyRSVPEventsView, save_locations, CreateCouplePostView
 from django.contrib.auth import views as auth_views
+from finalproject import views
 
 '''our url patterns so we can link to the page we want to show'''
 urlpatterns = [

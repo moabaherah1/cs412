@@ -7,7 +7,7 @@
 
 {% block content %}
 
-<h1>Plan Your Events </h1>
+<h1>Plan Your Events</h1>
 
 <!-- Category Filter -->
 <form method="get" action="{% url 'show_events' %}" style="margin-bottom: 20px;">
@@ -23,36 +23,48 @@
   <button type="submit">Apply Filter</button>
 </form>
 
-<div id="calendar"></div>
-
 {{ calendar_events|json_script:"calendar-data" }}
 
-<!-- FullCalendar CSS and JS so I can make the events laid out nice -->
+<meta name="csrf-token" content="{{ csrf_token }}">
+
+<div id="calendar"></div>
+
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
+    const calendarEl = document.getElementById('calendar');
+    const events = JSON.parse(document.getElementById('calendar-data').textContent);
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    var events = JSON.parse(document.getElementById('calendar-data').textContent);
-
-    var calendar = new FullCalendar.Calendar(calendarEl, {
+    const calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth',
       events: events,
       eventClick: function(info) {
         if (confirm('Do you want to RSVP to "' + info.event.title + '"?')) {
-          var form = document.createElement('form');
+          const form = document.createElement('form');
           form.method = 'POST';
           form.action = '{% url "rsvp_event" %}';
-          
-          var csrfToken = '{{ csrf_token }}';
 
-          form.innerHTML = `
-            <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
-            <input type="hidden" name="event_id" value="${info.event.id}">
-            <input type="hidden" name="event_title" value="${info.event.title}">
-          `;
+          const csrfInput = document.createElement('input');
+          csrfInput.type = 'hidden';
+          csrfInput.name = 'csrfmiddlewaretoken';
+          csrfInput.value = csrfToken;
+
+          const idInput = document.createElement('input');
+          idInput.type = 'hidden';
+          idInput.name = 'event_id';
+          idInput.value = info.event.id;
+
+          const titleInput = document.createElement('input');
+          titleInput.type = 'hidden';
+          titleInput.name = 'event_title';
+          titleInput.value = info.event.title;
+
+          form.appendChild(csrfInput);
+          form.appendChild(idInput);
+          form.appendChild(titleInput);
 
           document.body.appendChild(form);
           form.submit();
@@ -65,3 +77,4 @@
 </script>
 
 {% endblock %}
+
