@@ -4,7 +4,6 @@
 
 from collections import defaultdict
 from django.db.models import Q
-from datetime import datetime, timedelta, timezone
 from django.utils import timezone
 
 from django.http import HttpResponseForbidden
@@ -224,6 +223,7 @@ class RSVPEventView(LoginRequiredMixin, View):
 
 
 
+from datetime import datetime, timedelta, timezone
 
 def show_events(request):
     """Displays events from the ticketmaster API"""
