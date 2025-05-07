@@ -16,6 +16,9 @@
         <h3>{{profile.email}}</h3>
         <a href="{% url 'show_profile' profile.pk %}"> 
         <img src="{{ profile.image_url }}" alt="Profile image of {{ profile.first_name }}" width="150">
+        {% else %}
+        <img src="{% static 'finalproject/default_profile.png' %}" alt="Default Profile Image">
+        {% endif %}
     </a>
     </div>
     <hr>
